@@ -116,10 +116,9 @@
 				    die("Connection failed: " . mysqli_connect_error());
 				}
 
-				if(isset($_POST['city'])){
+				if(isset($_POST['go'])){
 					$city=$_POST['city'];
 				}
-
 				$sql="SELECT DISTINCT city FROM company order by city"; 
 				$result = mysqli_query($conn, $sql);
 				echo "<form method=\"post\" action=\"company.php\">";
@@ -134,6 +133,8 @@
 						$sql = "SELECT id, name, city, student_rating, evaluator_rating, app_dept, sector FROM company WHERE city='$city'";
 					else
 						$sql = "SELECT id, name, city, student_rating, evaluator_rating, app_dept, sector FROM company";
+				}else if(is_null($city)){
+					$sql = "SELECT id, name, city, student_rating, evaluator_rating, app_dept, sector FROM company";
 				}
 				$result = mysqli_query($conn, $sql);
 				if (mysqli_num_rows($result) > 0) {
