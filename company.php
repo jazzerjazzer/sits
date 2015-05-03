@@ -5,7 +5,8 @@
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-	
+	<meta http-equiv="Content-Type" content="text/HTML; charset=utf-8" />
+
 	<style style="text/css">
 	.company_table{
 		width:100%; 
@@ -33,7 +34,7 @@
 		height:500px;
 		width:20%;
 		float:left;
-		margin-top:20px;
+		margin-top:60px;
 	}
 	.button-2 {
 		text-align:center;
@@ -59,7 +60,7 @@
 		-moz-transition: all 0.1s ease;
 		-o-transition: all 0.1s ease;
 		transition: all 0.1s ease;
-		width:200px;
+		width:225px;
 		height:50px;
 	}
 	.button-2:hover {
@@ -111,7 +112,11 @@
 	.company_input{
 		width:200px;
 	}
-
+	#user_info{
+		border: 5px solid #520052;
+		color:white;
+	}
+	
 </style>
 	<body>
 		<!-- Top part-->
@@ -124,6 +129,8 @@
 	<div id="container">
 		<div id="companies"> 
 			<?php
+				@session_start();
+				$usr = $_SESSION["user_name"];
 
 				$servername = "localhost";
 				$username = "root";
@@ -198,12 +205,24 @@
 		</div>
 
 		<div id="nav">
-			<ul>
-			  <li><a href="#" class="button-2">My Applications</a></li>
-			  <li><a href="#" class="button-2">Quotas</a></li>
-			  <li><a href="#" class="button-2">Companies</a></li>
-			  <li><a href="#" class="button-2">Anouncements</a></li>
-			</ul>
+			<div id="user_info">
+				<?php
+					@session_start();
+					$usr = $_SESSION["user_name"];
+					echo "<p>$usr</p>";
+					echo "<p>CS</p>";
+				?>
+				<p>Logout</p>
+			</div>
+
+			<div id="menu_buttons">
+				<ul>
+				  <li><a href="#" class="button-2">My Applications</a></li>
+				  <li><a href="#" class="button-2">Quotas</a></li>
+				  <li><a href="#" class="button-2">Companies</a></li>
+				  <li><a href="#" class="button-2">Anouncements</a></li>
+				</ul>
+			</div>
 		</div>
 	</div>
 </body>
