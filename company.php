@@ -91,6 +91,27 @@
 	body{
 		background-color:#00A4CE; 
 	}
+
+	.menu_table_container {
+		width:100%;
+	}
+
+	.menu_container {
+		text-align: center;
+		width:70%;
+	}
+	.table_container{
+		width:99%;
+	}
+	.menu_comp {
+		padding-left: 20px;
+		display: inline-block;
+		float:left;
+	}
+	.company_input{
+		width:200px;
+	}
+
 </style>
 	<body>
 		<!-- Top part-->
@@ -116,18 +137,36 @@
 				    die("Connection failed: " . mysqli_connect_error());
 				}
 
-				if(isset($_POST['go'])){
+				if(isset($_POST['filter'])){
 					$city=$_POST['city'];
 				}
 				$sql="SELECT DISTINCT city FROM company order by city"; 
 				$result = mysqli_query($conn, $sql);
+				echo "<div class=\"menu_table_container\">";
+				echo "<div class=\"menu_container\">";
 				echo "<form method=\"post\" action=\"company.php\">";
+				echo "<div class=\"menu_comp\">";
 				echo "<select id=\"city\" name=\"city\" >"; 
 				echo "<option selected=\"selected\">All Companies</option>";
+
 				while ($row = mysqli_fetch_assoc($result)){
 					echo '<option value='.$row['city'].'>'.$row['city'].'</option>';
 				}
 				echo "</select>"; 
+				echo "</div>";
+
+				echo "<div class=\"menu_comp\">";
+				echo "<button type=\"submit\" name=\"filter\">Filter</button>";				
+				echo "</div>";
+				echo "<div class=\"menu_comp\">";
+				echo "<label for=\"company_input\">Company Name</label>";
+				echo "<input type=\"text\" id=\"company_input\" name=\"company_name\" value=\"\">";
+				echo "</div>";
+				echo "<div class=\"menu_comp\">";
+				echo "<button type=\"submit\" name=\"search\">Search</button>";
+				echo "</div>";
+				echo "</div>";
+				
 				if(strcmp($city, "") !== 0){
 					if(strcmp($city, "All Companies") !== 0)
 						$sql = "SELECT id, name, city, student_rating, evaluator_rating, app_dept, sector FROM company WHERE city='$city'";
@@ -137,6 +176,7 @@
 					$sql = "SELECT id, name, city, student_rating, evaluator_rating, app_dept, sector FROM company";
 				}
 				$result = mysqli_query($conn, $sql);
+				echo "<div class=\"table_container\">";
 				if (mysqli_num_rows($result) > 0) {
 				    // output data of each row
 				    echo "<table class=\"company_table\">"; // start a table tag in the HTML
@@ -149,12 +189,11 @@
 				} else {
 				    echo "0 results";
 				}
-
+				echo "</div>";
+				echo "</div>";
 				mysqli_close($conn);
 				
 				?>  
-				 	
-				 	<p><button type="submit" name="go">Filter</button></p>
 				</form>
 		</div>
 
