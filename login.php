@@ -22,7 +22,7 @@
 
 <?php 
 
-    /*$servername = "localhost";
+    $servername = "localhost";
     $username = "root";
     $password = "comodo365";
     $dbname = "project";
@@ -35,12 +35,13 @@
     }
 
 //check if the login form has been submitted
-if(isset($_POST['go'])){
-  $usr = mysqli_real_escape_string($conn, htmlentities($_POST['u_name']));
-  $psw = $_POST['u_pass'];  
+if(isset($_POST['login'])){
+  $usr = mysqli_real_escape_string($conn, htmlentities($_POST['user_name']));
+  $psw = $_POST['password'];  
     
- 
-  $q = "SELECT * FROM customer WHERE name='$usr' AND cid='$psw'";
+  echo $usr;
+  echo $psw;
+  $q = "SELECT * FROM person WHERE name='$usr' AND password='$psw'";
   
   //step3: run the query and store result
   $res = mysqli_query($conn, $q);
@@ -53,21 +54,21 @@ if(isset($_POST['go'])){
         $_SESSION["user_name"] = $usr;
         //creating a log SESSION VARIABLE that will persist through pages   
 
-    header('location:main_page.php');
+    //header('location:company.php');
   } else {
                 //create an error message   
     $error = 'Wrong details. Please try again'; 
   }
-}*/
+}
 
-if(isset($_POST['login'])){
+/*if(isset($_POST['login'])){
   $usr = $_POST['user_name'];  
   $psw = $_POST['password'];  
   session_start();
   $_SESSION["user_name"] = $usr;    
   header('location:company.php');
 
-}
+} */
 ?> 
 
   <section class="container">
@@ -77,7 +78,7 @@ if(isset($_POST['login'])){
         <p><input type="text" name="user_name" value="" placeholder="Username or Email"></p>
         <p><input type="password" name="password" value="" placeholder="Password"></p>
         
-        <p class="submit"><input type="submit" name="login" value="login"></p>
+        <p class="submit"><input type="submit" name="login" value="Login"></p>
       </form>
     </div>
 
