@@ -8,7 +8,20 @@
 	<meta http-equiv="Content-Type" content="text/HTML; charset=utf-8" />
 
 	<style style="text/css">
-	
+	.announcement_table{
+		width:100%; 
+		border-collapse:collapse; 
+		margin-top: 50px;
+	}
+	.announcement_table td{ 
+		padding:7px; border:#4e95f4 1px solid;
+	} 
+	.announcement_table tr{
+		background: #b8d1f3;
+	}
+	.announcement_table tr:hover {
+		background-color: #ffffff;
+	}
 
 	#header {
 		border-radius:10px;
@@ -78,6 +91,9 @@
 	body{
 		background-color:#00A4CE; 
 	}
+	.table_container{
+		width:99%;
+	}
 
 	#user_info{
 		border: 5px solid #520052;
@@ -94,8 +110,45 @@
 		
 
 	<div id="container">
+		
 		<div id="right_content_area"> 
+			<?php
+		
+				$servername = "localhost";
+				$username = "root";
+				$password = "comodo365";
+				$dbname = "project";
+
+				// Create connection
+				$conn = mysqli_connect($servername, $username, $password, $dbname);
+				// Check connection
+				if (!$conn) {
+					die("Connection failed: " . mysqli_connect_error());
+				}
+			//get announcements from database and display
+			$q = "SELECT title, message, date 
+				FROM generalAnnouncement NATURAL JOIN announcement";
 			
+		  
+			$res = mysqli_query($conn, $q);
+			echo "<div class=\"table_container\">";
+				if (mysqli_num_rows($res) > 0) {
+				    // output data of each row
+					echo "<table class=\"announcement_table\">";
+				    echo "<tr> <th>title</th> <th>message</th> <th>date</th></tr>";
+				    while($row = mysqli_fetch_assoc($res)) {
+						echo "<tr><td>" . $row['title'] . "</td><td>" . $row['message'] . "</td><td>" . $row['date'] . "</td></tr>"; 
+				    }
+				echo "</table>"; // start a table tag in the HTML
+				} else {
+				    echo "0 results";
+				}
+				
+			echo "</div>";
+					
+			mysqli_close($conn);
+				
+			?>	
 		</div>
 
 		<div id="nav">
