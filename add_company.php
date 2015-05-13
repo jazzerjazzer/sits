@@ -1,11 +1,10 @@
 <html>
 
 <head>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="Content-Type" content="text/HTML; charset=utf-8" name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-	<meta http-equiv="Content-Type" content="text/HTML; charset=utf-8" />
 
 	<style style="text/css">
 	
@@ -142,20 +141,67 @@
 	<div id="container">
 		<div id="right_content_area"> 
 			<div class="company_details">
+				<form action="" method="post" name="comp_form" class="comp_form">
 				<h2>Company Details</h2>
-				<button type="button">Add</button>
+				<button type="submit" name="add" action="#">Add</button>
 				<hr>
 			</div>
 			<div id="company_form">
-		    	<form action="" method="post" name="comp_form" class="comp_form">
 			        <fieldset>
 			            <label for="company_name">Name:</label>
 			            <input name="company_name" />
-			            <label for="country">Country</label>
-			            <input name="country" />
-			            <label for="city">City:</label>
-			            <input name="city" />
-			            <label for="address">Address:</label>
+			            <label for="country">Coüntry:</label>
+						<?php
+							
+							$servername = "localhost";
+							$username = "root";
+							$password = "comodo365";
+							$dbname = "project";
+
+							// Create connection
+							$conn = mysqli_connect($servername, $username, $password, $dbname);
+							mysqli_set_charset($conn,"utf8");
+							// Check connection
+							if (!$conn) {
+							    die("Connection failed: " . mysqli_connect_error());
+							}
+
+							$sql="SELECT DISTINCT country FROM company order by country"; 
+							$result = mysqli_query($conn, $sql);
+
+							echo "<select id=\"country\" name=\"country\" style =\"float: left;\">"; 
+							echo "<option selected=\"selected\"></option>";
+
+							while ($row = mysqli_fetch_assoc($result)){
+								echo '<option value='.$row['country'].'>'.$row['country'].'</option>';
+							}
+							echo "</select>"; 
+							echo "<label for=\"city\">City:</label>";
+				            $sql="SELECT DISTINCT city FROM company order by city"; 
+							$result = mysqli_query($conn, $sql);
+							echo "<select id=\"city\" name=\"city\" style =\"float: left;\">"; 
+							echo "<option selected=\"selected\"></option>";
+
+							while ($row = mysqli_fetch_assoc($result)){
+								echo '<option value='.$row['city'].'>'.$row['city'].'</option>';
+								
+							}
+							echo "</select>";
+							if(isset($_POST['add'])){
+								$city=$_POST['city'];
+								$country=$_POST['country'];
+								$name = $_POST['company_name'];
+								$address = $_POST['address'];
+								$telephone = $_POST['telephone'];
+								$sector = $_POST['sector'];
+
+								$sql = "INSERT INTO company VALUES (DEFAULT, 'asdasd', NULL, 'asdas', 'asdasd', NULL, \"not approved\", NULL, NULL,
+								 'asdas', 'asdasd', NULL, NULL, 'asdasd')";
+								$result = mysqli_query($conn, $sql);
+								echo $result;
+							}
+						?>			            
+						<label for="address">Address:</label>
 			            <input name="address" />
 			            <label for="telephone">Telephone:</label>
 			            <input name="telephone" />
