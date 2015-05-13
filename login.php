@@ -54,21 +54,12 @@ if(isset($_POST['login'])){
         $_SESSION["user_name"] = $usr;
         //creating a log SESSION VARIABLE that will persist through pages   
 
-    //header('location:company.php');
+    header('location:company.php');
   } else {
                 //create an error message   
     $error = 'Wrong details. Please try again'; 
   }
 }
-
-/*if(isset($_POST['login'])){
-  $usr = $_POST['user_name'];  
-  $psw = $_POST['password'];  
-  session_start();
-  $_SESSION["user_name"] = $usr;    
-  header('location:company.php');
-
-} */
 ?> 
 
   <section class="container">
@@ -84,6 +75,7 @@ if(isset($_POST['login'])){
 
     <div class="login-help">
       <p>Forgot your password? <a href="index.html">Click here to reset it</a>.</p>
+      <p class="submit"><input type="button" name="announcements" value="Announcements" onClick="window.location = 'general_announcement.php';"></p>
     </div>
   </section>
 </body>
