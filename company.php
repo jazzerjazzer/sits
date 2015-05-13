@@ -154,7 +154,7 @@
 				echo "<form method=\"post\" action=\"company.php\">";
 				echo "<div class=\"menu_comp\">";
 				echo "<select id=\"city\" name=\"city\" >"; 
-				echo "<option selected=\"selected\">All Companies</option>";
+ 				echo "<option selected=\"selected\">All Companies</option>";
 
 				while ($row = mysqli_fetch_assoc($result)){
 					echo '<option value='.$row['city'].'>'.$row['city'].'</option>';
@@ -176,11 +176,11 @@
 				
 				if(strcmp($city, "") !== 0){
 					if(strcmp($city, "All Companies") !== 0)
-						$sql = "SELECT id, name, city, student_rating, evaluator_rating, app_dept, sector FROM company WHERE city='$city'";
+						$sql = "SELECT compID, name, city, studentRating, evaluatorRating, applicableDepts, sector FROM company WHERE city='$city'";
 					else
-						$sql = "SELECT id, name, city, student_rating, evaluator_rating, app_dept, sector FROM company";
+						$sql = "SELECT compID, name, city, studentRating, evaluatorRating, applicableDepts, sector FROM company";
 				}else if(is_null($city)){
-					$sql = "SELECT id, name, city, student_rating, evaluator_rating, app_dept, sector FROM company";
+					$sql = "SELECT compID, name, city, studentRating, evaluatorRating, applicableDepts, sector FROM company";
 				}
 				$result = mysqli_query($conn, $sql);
 				echo "<div class=\"table_container\">";
@@ -189,8 +189,8 @@
 				    echo "<table class=\"company_table\">"; // start a table tag in the HTML
 				    echo "<tr> <th>ID</th> <th>Name</th> <th>City</th> <th>Student Rating</th> <th>Evaluator Rating</th> <th>App Depts.</th> <th>Sector</th></tr>";
 				    while($row = mysqli_fetch_assoc($result)) {
-						echo "<tr><td>" . $row['id'] . "</td><td>" . $row['name'] . "</td><td>" . $row['city'] . "</td><td>"
-						. $row['student_rating'] . "</td><td>" . $row['evaluator_rating'] . "</td><td>" . $row['app_dept'] . "</td><td>" . $row['sector'] . "</td></tr>"; 
+						echo "<tr><td>" . $row['compID'] . "</td><td>" . $row['name'] . "</td><td>" . $row['city'] . "</td><td>"
+						. $row['studentRating'] . "</td><td>" . $row['evaluatorRating'] . "</td><td>" . $row['applicableDepts'] . "</td><td>" . $row['sector'] . "</td></tr>"; 
 				    }
 				echo "</table>"; // start a table tag in the HTML
 				} else {
@@ -220,7 +220,7 @@
 				  <li><a href="#" class="button-2">My Applications</a></li>
 				  <li><a href="#" class="button-2">Quotas</a></li>
 				  <li><a href="#" class="button-2">Companies</a></li>
-				  <li><a href="#" class="button-2">Anouncements</a></li>
+				  <li><a href="general_announcement.php" class="button-2">Anouncements</a></li>
 				</ul>
 			</div>
 		</div>
