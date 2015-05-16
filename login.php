@@ -76,6 +76,7 @@ if(isset($_POST['login'])){
     <div class="login-help">
       <p>Forgot your password? <a href="index.html">Click here to reset it</a>.</p>
       <p class="submit"><input type="button" name="announcements" value="Announcements" onClick="window.location = 'general_announcement.php';"></p>
+      <p class="submit"><input type="button" name="companyList" value="Company List" onClick="window.location = 'company.php';"></p>
     </div>
   </section>
 </body>
