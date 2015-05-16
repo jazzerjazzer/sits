@@ -116,6 +116,14 @@
 					$password = "comodo365";
 					$dbname = "project";
 
+					$result_close_exec = $_GET['result'];
+
+					if($result_close_exec == 2){
+						echo "<br> applied successfuly!";
+					}else if($result_close_exec == 1){
+						echo "<br> cannot applied!";
+					}
+
 					// Create connection
 					$conn = mysqli_connect($servername, $username, $password, $dbname);
 					// Check connection
@@ -155,21 +163,21 @@
 					
 					if(strcmp($city, "") !== 0){
 						if(strcmp($city, "All Companies") !== 0)
-							$sql = "SELECT name, city, quotaDeadline, internshipStartDate, internshipEndDate, quotaAmount - qcount, quotaAmount, 
+							$sql = "SELECT quota.quotaID, company.compID,name, city, quotaDeadline, internshipStartDate, internshipEndDate, qcount, quotaAmount, 
 								quota.status, availableYears
 								FROM (SELECT quotaID as quotaID, count(*) as qcount, compID as compID
 								FROM quotaApply
 								GROUP BY quotaID) as allAplications, quota, opens, company
 								WHERE allAplications.compID = quota.compID = opens.compID = company.compID AND company.city='$city'";
 						else
-							$sql ="SELECT name, city, quotaDeadline, internshipStartDate, internshipEndDate, quotaAmount - qcount, quotaAmount, 
+							$sql ="SELECT quota.quotaID, company.compID, name, city, quotaDeadline, internshipStartDate, internshipEndDate, qcount, quotaAmount, 
 								quota.status, availableYears
 								FROM (SELECT quotaID as quotaID, count(*) as qcount, compID as compID
 								FROM quotaApply
 								GROUP BY quotaID) as allAplications, quota, opens, company
 								WHERE allAplications.compID = quota.compID = opens.compID = company.compID";
 					}else if(is_null($city)){
-						$sql = "SELECT name, city, quotaDeadline, internshipStartDate, internshipEndDate, quotaAmount - qcount, quotaAmount, 
+						$sql = "SELECT quota.quotaID, company.compID, name, city, quotaDeadline, internshipStartDate, internshipEndDate, qcount, quotaAmount, 
 								quota.status, availableYears
 								FROM (SELECT quotaID as quotaID, count(*) as qcount, compID as compID
 								FROM quotaApply
@@ -181,10 +189,12 @@
 					if (mysqli_num_rows($result) > 0) {
 
 					    echo "<table class=\"company_table\">"; 
-					    echo "<tr> <th>Name</th> <th>City</th> <th>Quota Deadline</th> <th>Start Date</th> <th>End Date</th> <th>Available</th> <th>Quota Amount</th> <th>Status</th> <th>Available Years</th></tr>";
+					    echo "<tr> <th>Name</th> <th>City</th> <th>Quota Deadline</th> <th>Start Date</th> <th>End Date</th> <th>Total Applications</th> <th>Quota Amount</th> <th>Status</th> <th>Available Years</th><th>Actions</th></tr>";
 					    while($row = mysqli_fetch_assoc($result)) {
 							echo "<tr><td>" . $row['name'] . "</td><td>" . $row['city'] . "</td><td>" . $row['quotaDeadline'] . "</td><td>"
-							. $row['internshipStartDate'] . "</td><td>" . $row['internshipEndDate'] . "</td><td>" . $row['quotaAmount - qcount'] . "</td><td>" . $row['quotaAmount'] . "</td><td>" . $row['status'] . "</td><td>".  $row['availableYears'] . "</td><td>"."</tr>"; 
+							. $row['internshipStartDate'] . "</td><td>" . $row['internshipEndDate'] . "</td><td>" . $row['qcount'] . "</td><td>" . $row['quotaAmount'] . "</td><td>" . $row['status'] . "</td><td>".  $row['availableYears'] . 
+								"</td><td>"."<a href=add_quota.php?quotaID=". $row["quotaID"] . "&compID=". $row["compID"] . "&userID=".$_SESSION["userID"]. ">Apply</a>"."</td></tr>"; 
+								"</td><td>"." "."</td></tr>"; 
 					    }
 					echo "</table>"; // start a table tag in the HTML
 					} else {
@@ -200,10 +210,10 @@
 			<div id="nav">
 				<div id="user_info">
 					<?php
-					@session_start();
-					$usr = $_SESSION["user_name"];
-					echo "<p>$usr</p>";
-					echo "<p>CS</p>";
+						@session_start();
+						$usr = $_SESSION["userID"];
+						echo "<p>$usr</p>";
+						echo "<p>CS</p>";
 					?>
 					<p>Logout</p>
 				</div>

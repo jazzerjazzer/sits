@@ -208,7 +208,7 @@
 			<div id="user_info">
 				<?php
 					@session_start();
-					$usr = $_SESSION["user_name"];
+					$usr = $_SESSION["userID"];
 					echo "<p>$usr</p>";
 					echo "<p>CS</p>";
 				?>
