@@ -36,12 +36,12 @@
 
 //check if the login form has been submitted
 if(isset($_POST['login'])){
-  $usr = mysqli_real_escape_string($conn, htmlentities($_POST['user_name']));
+  $usr = mysqli_real_escape_string($conn, htmlentities($_POST['userID']));
   $psw = $_POST['password'];  
     
   echo $usr;
   echo $psw;
-  $q = "SELECT * FROM person WHERE name='$usr' AND password='$psw'";
+  $q = "SELECT * FROM person WHERE userID='$usr' AND password='$psw'";
   
   //step3: run the query and store result
   $res = mysqli_query($conn, $q);
@@ -51,7 +51,7 @@ if(isset($_POST['login'])){
     #########  LOGGING IN  ##########
     //starting a session  
         session_start();
-        $_SESSION["user_name"] = $usr;
+        $_SESSION["userID"] = $usr;
         //creating a log SESSION VARIABLE that will persist through pages   
 
     header('location:company.php');
@@ -66,7 +66,7 @@ if(isset($_POST['login'])){
     <div class="login">
       <h1>Login to SITS</h1>
       <form name="Form" method="post" onsubmit="return validateForm()" action="#">
-        <p><input type="text" name="user_name" value="" placeholder="Username or Email"></p>
+        <p><input type="text" name="userID" value="" placeholder="Username or Email"></p>
         <p><input type="password" name="password" value="" placeholder="Password"></p>
         
         <p class="submit"><input type="submit" name="login" value="Login"></p>

@@ -208,7 +208,7 @@
 			<div id="user_info">
 				<?php
 					@session_start();
-					$usr = $_SESSION["user_name"];
+					$usr = $_SESSION["userID"];
 					echo "<p>$usr</p>";
 					echo "<p>CS</p>";
 				?>
@@ -217,9 +217,9 @@
 
 			<div id="menu_buttons">
 				<ul>
-				  <li><a href="#" class="button-2">My Applications</a></li>
-				  <li><a href="#" class="button-2">Quotas</a></li>
-				  <li><a href="#" class="button-2">Companies</a></li>
+				  <li><a href="applications.php" class="button-2">My Applications</a></li>
+				  <li><a href="quota.php" class="button-2">Quotas</a></li>
+				  <li><a href="company.php" class="button-2">Companies</a></li>
 				  <li><a href="general_announcement.php" class="button-2">Anouncements</a></li>
 				</ul>
 			</div>

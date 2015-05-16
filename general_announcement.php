@@ -72,7 +72,36 @@
     	margin: 0;
     	padding: 0;
 	}
-	
+	.button-2 {
+		text-align:center;
+		text-decoration: none;
+		font-size: 120%;
+		font-family: sans-serif;
+		color: #FFF;
+		-webkit-font-smoothing: antialiased;
+		background: #EE8532;
+		padding: 10px 20px;
+		margin:5px 0px;
+		display: inline-block;
+		white-space: nowrap;
+		-moz-border-radius: 5px;
+		-webkit-border-radius: 5px;
+		border-radius: 2px;
+		border: 2px solid rgba(255, 255, 255, 0.23);
+		-moz-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.14);
+		-webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.14);
+		box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.14);
+		-webkit-transition: all 0.1s ease;
+		-ms-transition: all 0.1s ease;
+		-moz-transition: all 0.1s ease;
+		-o-transition: all 0.1s ease;
+		transition: all 0.1s ease;
+		width:225px;
+		height:50px;
+	}
+	.button-2:hover {
+		background: #C46C28;
+	}
 
 	#right_content_area{
 		width:79%;
@@ -164,10 +193,10 @@
 
 			<div id="menu_buttons">
 				<ul>
-				  <li><a href="#" class="nav_button">My Applications</a></li>
-				  <li><a href="#" class="nav_button">Quotas</a></li>
-				  <li><a href="#" class="nav_button">Companies</a></li>
-				  <li><a href="#" class="nav_button">Anouncements</a></li>
+				  <li><a href="applications.php" class="button-2">My Applications</a></li>
+				  <li><a href="quota.php" class="button-2">Quotas</a></li>
+				  <li><a href="company.php" class="button-2">Companies</a></li>
+				  <li><a href="general_announcement.php" class="button-2">Anouncements</a></li>
 				</ul>
 			</div>
 		</div>
