@@ -160,41 +160,57 @@
 					echo "<button type=\"submit\" name=\"search\">Search</button>";
 					echo "</div>";
 					echo "</div>";
+					$sql = "SELECT quota.quotaID, company.compID,name, city, quotaDeadline, internshipStartDate, internshipEndDate, qcount, quotaAmount, 
+							quota.status, availableYears
+							FROM (SELECT quotaID as quotaID, count(*) as qcount, compID as compID
+							FROM quotaApply
+							GROUP BY quotaID) as allAplications, quota, opens, company
+							WHERE allAplications.compID = quota.compID = opens.compID = company.compID";
+							
 					
 					if(strcmp($city, "") !== 0){
-						if(strcmp($city, "All Companies") !== 0)
+						if(strcmp($city, "All Companies") !== 0){
 							$sql = "SELECT quota.quotaID, company.compID,name, city, quotaDeadline, internshipStartDate, internshipEndDate, qcount, quotaAmount, 
 								quota.status, availableYears
 								FROM (SELECT quotaID as quotaID, count(*) as qcount, compID as compID
 								FROM quotaApply
 								GROUP BY quotaID) as allAplications, quota, opens, company
 								WHERE allAplications.compID = quota.compID = opens.compID = company.compID AND company.city='$city'";
-						else
-							$sql ="SELECT quota.quotaID, company.compID, name, city, quotaDeadline, internshipStartDate, internshipEndDate, qcount, quotaAmount, 
-								quota.status, availableYears
-								FROM (SELECT quotaID as quotaID, count(*) as qcount, compID as compID
-								FROM quotaApply
-								GROUP BY quotaID) as allAplications, quota, opens, company
-								WHERE allAplications.compID = quota.compID = opens.compID = company.compID";
-					}else if(is_null($city)){
-						$sql = "SELECT quota.quotaID, company.compID, name, city, quotaDeadline, internshipStartDate, internshipEndDate, qcount, quotaAmount, 
-								quota.status, availableYears
-								FROM (SELECT quotaID as quotaID, count(*) as qcount, compID as compID
-								FROM quotaApply
-								GROUP BY quotaID) as allAplications, quota, opens, company
-								WHERE allAplications.compID = quota.compID = opens.compID = company.compID";
+						}
 					}
 					$result = mysqli_query($conn, $sql);
+					$zeroResult = FALSE;
+					if(mysqli_num_rows($result) == 0){
+						$sql = "SELECT quota.quotaID, company.compID,name, city, quotaDeadline, internshipStartDate, internshipEndDate, quotaAmount, 
+							quota.status, availableYears
+							FROM quota, opens, company
+							WHERE quota.compID = opens.compID = company.compID";
+						if(strcmp($city, "") !== 0){
+							if(strcmp($city, "All Companies") !== 0){
+								$sql = "SELECT quota.quotaID, company.compID,name, city, quotaDeadline, internshipStartDate, internshipEndDate, quotaAmount, 
+									quota.status, availableYears
+									FROM quota, opens, company
+									WHERE quota.compID = opens.compID = company.compID AND company.city='$city'";
+							}
+						}	
+						$zeroResult = TRUE;
+					}
 					echo "<div class=\"table_container\">";
+					$result = mysqli_query($conn, $sql);
 					if (mysqli_num_rows($result) > 0) {
 
 					    echo "<table class=\"company_table\">"; 
 					    echo "<tr> <th>Name</th> <th>City</th> <th>Quota Deadline</th> <th>Start Date</th> <th>End Date</th> <th>Total Applications</th> <th>Quota Amount</th> <th>Status</th> <th>Available Years</th><th>Actions</th></tr>";
 					    while($row = mysqli_fetch_assoc($result)) {
-							echo "<tr><td>" . $row['name'] . "</td><td>" . $row['city'] . "</td><td>" . $row['quotaDeadline'] . "</td><td>"
-							. $row['internshipStartDate'] . "</td><td>" . $row['internshipEndDate'] . "</td><td>" . $row['qcount'] . "</td><td>" . $row['quotaAmount'] . "</td><td>" . $row['status'] . "</td><td>".  $row['availableYears'] . 
-								"</td><td>"."<a href=add_quota.php?quotaID=". $row["quotaID"] . "&compID=". $row["compID"] . "&userID=".$_SESSION["userID"]. ">Apply</a>"."</td></tr>"; 
-								"</td><td>"." "."</td></tr>"; 
+					    	if(!$zeroResult)
+								echo "<tr><td>" . $row['name'] . "</td><td>" . $row['city'] . "</td><td>" . $row['quotaDeadline'] . "</td><td>"
+								. $row['internshipStartDate'] . "</td><td>" . $row['internshipEndDate'] . "</td><td>" . $row['qcount'] . "</td><td>" . $row['quotaAmount'] . "</td><td>" . $row['status'] . "</td><td>".  $row['availableYears'] . 
+									"</td><td>"."<a href=quota_apply.php?quotaID=". $row["quotaID"] . "&compID=". $row["compID"] . "&userID=".$_SESSION["userID"]. ">Apply</a>"."</td></tr>"; 
+							else
+								echo "<tr><td>" . $row['name'] . "</td><td>" . $row['city'] . "</td><td>" . $row['quotaDeadline'] . "</td><td>"
+								. $row['internshipStartDate'] . "</td><td>" . $row['internshipEndDate'] . "</td><td>" . "0" . "</td><td>" . $row['quotaAmount'] . "</td><td>" . $row['status'] . "</td><td>".  $row['availableYears'] . 
+									"</td><td>"."<a href=quota_apply.php?quotaID=". $row["quotaID"] . "&compID=". $row["compID"] . "&userID=".$_SESSION["userID"]. ">Apply</a>"."</td></tr>"; 
+
 					    }
 					echo "</table>"; // start a table tag in the HTML
 					} else {
