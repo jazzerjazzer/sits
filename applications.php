@@ -143,15 +143,17 @@
 				if (!$conn) {
 				    die("Connection failed: " . mysqli_connect_error());
 				}
+				
+				$sql = "SELECT quotaApply.appID, name, city, quotaDeadline, internshipDuration, qcount, quotaAmount, quota.status 
+				FROM 
+					(SELECT quotaID as quotaID, count(*) as qcount FROM quotaApply GROUP BY quotaID) as allAplications, quotaApply, quota, company 
+					WHERE allAplications.quotaID = quota.quotaID AND company.compID = quota.compID = quotaApply.compID 
+						AND studentID = '$userID' AND quotaApply.quotaID = allAplications.quotaID";
+				
 				$result_cancel_application = $_GET['result'];
 				if($result_cancel_application == 2){
-					echo "canceled succefully";
+					echo "canceled succefully <br>";
 				}
-				$sql = "SELECT quotaApply.appID, name, city, quotaDeadline, internshipDuration, qcount, quotaAmount, quota.status 
-						FROM (SELECT quotaID as quotaID, count(*) as qcount
-							  FROM quotaApply 
-							  GROUP BY quotaID) as allAplications, quotaApply, quota, company 
-						WHERE allAplications.quotaID = quota.quotaID = quotaApply.quotaID AND company.compID = quota.compID = quotaApply.compID AND studentID = '$userID'";
 				$result = mysqli_query($conn, $sql);
 				echo "<div class=\"table_container\">";
 				if (mysqli_num_rows($result) > 0) {
@@ -163,7 +165,7 @@
 						"</td><td>" ."<a href=quota_apply_cancel.php?appID=". $row["appID"] . ">Cancel Application</a>"."</td></tr>";
 				}
 				
-					echo "</table>"; // start a table tag in the HTML
+					echo "</table>"; 
 				} else {
 				    echo "0 results";
 				}

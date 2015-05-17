@@ -21,6 +21,7 @@
 	
 	if ($conn->query($sql) == TRUE) {
 	    $sql = "UPDATE quotaApply SET quotaID='$quotaID', compID = '$compID', studentID = '$userID' WHERE quotaID IS NULL AND compID IS NULL AND studentID IS NULL";
+		echo $sql;
 		if ($conn->query($sql) == TRUE) {
 			header('location:quota.php?result=2');
 		}else{

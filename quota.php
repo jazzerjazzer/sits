@@ -167,16 +167,17 @@
 										  				  FROM quotaApply 
 										 				  GROUP BY quotaID) as aa) AND q.compID = c.compID"; 
 
-					$sql = "SELECT DISTINCT quota.quotaID, company.compID,name, city, quotaDeadline, internshipStartDate, internshipEndDate, qcount, quotaAmount, quota.status, availableYears  
+					$sql = "SELECT quota.quotaID, company.compID,name, city, quotaDeadline, internshipStartDate, internshipEndDate, qcount, quotaAmount, quota.status, availableYears  
 							FROM (SELECT quotaID as quotaID, count(*) as qcount
 	  								FROM quotaApply 
-	  								GROUP BY quotaID) as allAplications, quota, quotaApply, opens, company 
-							WHERE quota.quotaID = opens.quotaID AND company.compID = quota.compID = opens.compID";
+	  								GROUP BY quotaID) as allAplications, quota,company, opens
+							WHERE allAplications.quotaID = quota.quotaID = opens.quotaID 
+								AND company.compID = quota.compID = opens.compID";
 							
 					
 					if(strcmp($city, "") !== 0){
 						if(strcmp($city, "All Companies") !== 0){
-							$sql = "SELECT DISTINCT quota.quotaID, company.compID,name, city, quotaDeadline, internshipStartDate, internshipEndDate, qcount, quotaAmount, quota.status, availableYears 
+							$sql = "SELECT quota.quotaID, company.compID,name, city, quotaDeadline, internshipStartDate, internshipEndDate, qcount, quotaAmount, quota.status, availableYears 
 									FROM (SELECT quotaID as quotaID, count(*) as qcount
 										  FROM quotaApply 
 										  GROUP BY quotaID) as allAplications, quotaApply, quota, opens, company 
