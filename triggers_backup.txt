@@ -1,0 +1,32 @@
+****************************************************************
+Application_triggers
+****************************************************************
+DROP TRIGGER `project`.`removeApplication`;
+CREATE TRIGGER `project`.`removeApplication` BEFORE DELETE
+    ON project.application FOR EACH ROW
+IF OLD.appType = "directApply" THEN
+  DELETE FROM directApply WHERE appID = OLD.appID;
+ELSE
+  DELETE FROM quotaApply WHERE appID = OLD.appID;
+END IF;
+
+*******************************************************************
+DROP TRIGGER `project`.`newApplication`;
+CREATE TRIGGER `project`.`newApplication` AFTER INSERT
+    ON project.application FOR EACH ROW
+IF NEW.appType = "directApply" THEN
+  INSERT INTO directApply VALUES (NEW.appID, null, null, null, null);
+ELSE
+  INSERT INTO quotaApply VALUES (NEW.appID, null, null, null, 0);
+END IF;
+
+*******************************************************************
+Company_trigger
+*******************************************************************
+
+IF 
+NEW.status = "approved" AND OLD.status = "not approved" THEN
+INSERT INTO registeredCompany VALUES (OLD.compID,DEFAULT);
+END IF;
+
+******************************************************************
