@@ -130,7 +130,7 @@
 		<div id="companies"> 
 			<?php
 				@session_start();
-				$usr = $_SESSION["user_name"];
+				$userID = $_SESSION["userID"];
 
 				$servername = "localhost";
 				$username = "root";
@@ -143,66 +143,34 @@
 				if (!$conn) {
 				    die("Connection failed: " . mysqli_connect_error());
 				}
-
-				if(isset($_POST['filter'])){
-					$city=$_POST['city'];
+				$result_cancel_application = $_GET['result'];
+				if($result_cancel_application == 2){
+					echo "canceled succefully";
 				}
-				$sql="SELECT DISTINCT city FROM company order by city"; 
-				$result = mysqli_query($conn, $sql);
-				echo "<div class=\"menu_table_container\">";
-				echo "<div class=\"menu_container\">";
-				echo "<form method=\"post\" action=\"company.php\">";
-				echo "<div class=\"menu_comp\">";
-				echo "<select id=\"city\" name=\"city\" >"; 
- 				echo "<option selected=\"selected\">All Companies</option>";
-
-				while ($row = mysqli_fetch_assoc($result)){
-					echo '<option value='.$row['city'].'>'.$row['city'].'</option>';
-				}
-				echo "</select>"; 
-				echo "</div>";
-
-				echo "<div class=\"menu_comp\">";
-				echo "<button type=\"submit\" name=\"filter\">Filter</button>";				
-				echo "</div>";
-				echo "<div class=\"menu_comp\">";
-				echo "<label for=\"company_input\">Company Name</label>";
-				echo "<input type=\"text\" id=\"company_input\" name=\"company_name\" value=\"\">";
-				echo "</div>";
-				echo "<div class=\"menu_comp\">";
-				echo "<button type=\"submit\" name=\"search\">Search</button>";
-				echo "</div>";
-				echo "</div>";
-				
-				if(strcmp($city, "") !== 0){
-					if(strcmp($city, "All Companies") !== 0)
-						$sql = "SELECT compID, name, city, studentRating, evaluatorRating, applicableDepts, sector FROM company NATURAL JOIN registeredCompany WHERE city='$city'";
-					else
-						$sql = "SELECT compID, name, city, studentRating, evaluatorRating, applicableDepts, sector FROM company NATURAL JOIN registeredCompany";
-				}else if(is_null($city)){
-					$sql = "SELECT compID, name, city, studentRating, evaluatorRating, applicableDepts, sector FROM company NATURAL JOIN registeredCompany";
-				}
+				$sql = "SELECT quotaApply.appID, name, city, quotaDeadline, internshipDuration, qcount, quotaAmount, quota.status 
+						FROM (SELECT quotaID as quotaID, count(*) as qcount
+							  FROM quotaApply 
+							  GROUP BY quotaID) as allAplications, quotaApply, quota, company 
+						WHERE allAplications.quotaID = quota.quotaID = quotaApply.quotaID AND company.compID = quota.compID = quotaApply.compID AND studentID = '$userID'";
 				$result = mysqli_query($conn, $sql);
 				echo "<div class=\"table_container\">";
 				if (mysqli_num_rows($result) > 0) {
-				    // output data of each row
-				    echo "<table class=\"company_table\">"; // start a table tag in the HTML
-				    echo "<tr> <th>ID</th> <th>Name</th> <th>City</th> <th>Student Rating</th> <th>Evaluator Rating</th> <th>App Depts.</th> <th>Sector</th> <th>Actions</th></tr>";
+				    echo "<table class=\"company_table\">"; 
+				    echo "<tr> <th>Company Name</th> <th>City</th> <th>Quota Deadline</th> <th>Training Period</th> <th>Total Applications</th> <th>Quota Amount</th> <th>Status</th> <th>Actions</th></tr>";
 				    while($row = mysqli_fetch_assoc($result)) {
-						echo "<tr><td>" . $row['compID'] . "</td><td>" . $row['name'] . "</td><td>" . $row['city'] . "</td><td>"
-						. $row['studentRating'] . "</td><td>" . $row['evaluatorRating'] . "</td><td>" . $row['applicableDepts'] . "</td><td>" . $row['sector'] . 
-						"</td><td>" ."<a href=direct_apply.php?compID=". $row["compID"] . "&userID=".$_SESSION["userID"]. ">Direct Apply</a>"."</td></tr>";
-				    }
-				echo "</table>"; // start a table tag in the HTML
+						echo "<tr><td>" . $row['name'] . "</td><td>" . $row['city'] . "</td><td>" . $row['quotaDeadline'] . "</td><td>"
+						. $row['internshipDuration'] . "</td><td>" . $row['qcount'] . "</td><td>" . $row['quotaAmount'] . "</td><td>" . $row['status'] . 
+						"</td><td>" ."<a href=quota_apply_cancel.php?appID=". $row["appID"] . ">Cancel Application</a>"."</td></tr>";
+				}
+				
+					echo "</table>"; // start a table tag in the HTML
 				} else {
 				    echo "0 results";
 				}
 				echo "</div>";
-				echo "</div>";
 				mysqli_close($conn);
 				
 				?>  
-				</form>
 		</div>
 
 		<div id="nav">

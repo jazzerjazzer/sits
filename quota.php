@@ -187,11 +187,11 @@
 					$result2 = mysqli_query($conn, $sql2);
 
 					echo "<div class=\"table_container\">";
+					echo "<table class=\"company_table\">"; 
+					echo "<tr> <th>Name</th> <th>City</th> <th>Quota Deadline</th> <th>Start Date</th> <th>End Date</th> <th>Total Applications</th> <th>Quota Amount</th> <th>Status</th> <th>Available Years</th><th>Actions</th></tr>";
 
 					if (mysqli_num_rows($result) > 0) {
 
-					    echo "<table class=\"company_table\">"; 
-					    echo "<tr> <th>Name</th> <th>City</th> <th>Quota Deadline</th> <th>Start Date</th> <th>End Date</th> <th>Total Applications</th> <th>Quota Amount</th> <th>Status</th> <th>Available Years</th><th>Actions</th></tr>";
 					    while($row = mysqli_fetch_assoc($result)) {
 					    	
 								echo "<tr><td>" . $row['name'] . "</td><td>" . $row['city'] . "</td><td>" . $row['quotaDeadline'] . "</td><td>"

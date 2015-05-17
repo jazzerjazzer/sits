@@ -7,7 +7,7 @@
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 
 	<style style="text/css">
-	
+
 
 	#header {
 		border-radius:10px;
@@ -147,7 +147,6 @@
 				<hr>
 			</div>
 			<div id="company_form">
-
 				<?php
 
 					$servername = "localhost";
@@ -183,20 +182,35 @@
 					$userID = $_GET['userID'];
 					
 					if(isset($_POST['apply'])){
+						/*echo "<script type=\"text/javascript\">myFunction();</script>";
+
+						$sql = "SELECT appID FROM directApply WHERE studentID = '$userID'";
+						$result = mysqli_query($conn, $sql);
+						$rows = mysqli_num_rows($result);
+						if ($rows > 0) {
+							$sql = "UPDATE directApply SET compID = '$compID', studentID = '$userID', internshipStartDate = '$startDate', internshipEndDate = '$endDate' WHERE studentID = '$userID'";
+							echo '<script type="text/javascript">myFunction();</script>';
+						}*/
+						
 						$sql = "INSERT INTO application VALUES (DEFAULT, DEFAULT, \"not approved\", \"directApply\", NULL)";
 						$startDate = date('Y-m-d', strtotime($_POST['start']));
 						$endDate = date('Y-m-d', strtotime($_POST['end']));
 
 						if ($conn->query($sql) == TRUE) {
 						    $sql = "UPDATE directApply SET compID = '$compID', studentID = '$userID', internshipStartDate = '$startDate', internshipEndDate = '$endDate' WHERE compID IS NULL AND studentID IS NULL";
+							
 							if ($conn->query($sql) == TRUE) {
-								
-								//header('location:quota.php?result=2');
+								$sql = "SELECT appID FROM directApply WHERE studentID = '$userID'";
+								$result = mysqli_query($conn, $sql);
+								$row = mysqli_fetch_assoc($result);
+								$appID = $row['appID'];
+								header('location:application.php?result=2&appID='.$appID);
 							}else{
-								//header('location:quota.php?result=1');
+								header('location:application.php?result=1');
 							}
 						} else {
 						    echo "Error adding record: " . $conn->error;
+							header('location:application.php?result=1');
 						}
 					}
 	            ?>
@@ -214,7 +228,6 @@
 				?>
 				<p>Logout</p>
 			</div>
-
 			<div id="menu_buttons">
 				<ul>
 					<li><a href="applications.php" class="button-2">My Applications</a></li>

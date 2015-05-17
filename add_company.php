@@ -23,7 +23,7 @@
 		float:left;
 		margin-top:60px;
 	}
-	.nav_button {
+	.button-2 {
 		text-align:center;
 		text-decoration: none;
 		font-size: 120%;
@@ -50,7 +50,7 @@
 		width:225px;
 		height:50px;
 	}
-	.nav_button:hover {
+	.button-2:hover {
 		background: #C46C28;
 	}
 	ul {
@@ -153,6 +153,16 @@
 			            <label for="country">Coüntry:</label>
 						<?php
 							
+							function generateRandomString($length = 8) {
+							    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+							    $charactersLength = strlen($characters);
+							    $randomString = '';
+							    for ($i = 0; $i < $length; $i++) {
+							        $randomString .= $characters[rand(0, $charactersLength - 1)];
+							    }
+							    return $randomString;
+							}
+
 							$servername = "localhost";
 							$username = "root";
 							$password = "comodo365";
@@ -194,9 +204,9 @@
 								$address = $_POST['address'];
 								$telephone = $_POST['telephone'];
 								$sector = $_POST['sector'];
-
-								$sql = "INSERT INTO company VALUES (DEFAULT, 'asdasd', NULL, 'asdas', 'asdasd', NULL, \"not approved\", NULL, NULL,
-								 'asdas', 'asdasd', NULL, NULL, 'asdasd')";
+								$password = generateRandomString(8);
+								$sql = "INSERT INTO company VALUES (DEFAULT, '$name', '$password', '$address', '$telephone', NULL, \"not approved\", NULL, NULL,
+								 '$city', '$country', NULL, NULL, '$sector')";
 								$result = mysqli_query($conn, $sql);
 								echo $result;
 							}
@@ -225,10 +235,10 @@
 
 			<div id="menu_buttons">
 				<ul>
-				  <li><a href="#" class="nav_button">My Applications</a></li>
-				  <li><a href="#" class="nav_button">Quotas</a></li>
-				  <li><a href="#" class="nav_button">Companies</a></li>
-				  <li><a href="#" class="nav_button">Anouncements</a></li>
+					<li><a href="applications.php" class="button-2">My Applications</a></li>
+					<li><a href="quota.php" class="button-2">Quotas</a></li>
+					<li><a href="company.php" class="button-2">Companies</a></li>
+					<li><a href="general_announcement.php" class="button-2">Anouncements</a></li>
 				</ul>
 			</div>
 		</div>
