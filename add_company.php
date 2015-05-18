@@ -150,7 +150,7 @@
 			        <fieldset>
 			            <label for="company_name">Name:</label>
 			            <input name="company_name" />
-			            <label for="country">Coüntry:</label>
+			            <label for="country">Country:</label>
 						<?php
 							
 							function generateRandomString($length = 8) {

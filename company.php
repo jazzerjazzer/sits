@@ -172,6 +172,9 @@
 				echo "<div class=\"menu_comp\">";
 				echo "<button type=\"submit\" name=\"search\">Search</button>";
 				echo "</div>";
+				echo "<div class=\"menu_comp\">";
+				echo "<button type=\"button\" onClick=\"window.location = 'add_company.php';\" name=\"add_company\">Add Company</button>";
+				echo "</div>";
 				echo "</div>";
 				
 				if(strcmp($city, "") !== 0){
