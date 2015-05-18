@@ -190,7 +190,7 @@
 				echo "</div>";
 				echo "</div>";
 
-				$sql = "SELECT compID, name, city, studentRating, evaluatorRating, applicableDepts, sector 
+				$sql = "SELECT compID, name, city, studentRating, evaluatorRating, applicableDepts, sector, status
 						FROM company";
 
 				if(strcmp($city, "") !== 0){
@@ -207,7 +207,7 @@
 				}
 
 				if(strcmp($searchKey, "") !== 0){
-					$sql = "SELECT compID, name, city, studentRating, evaluatorRating, applicableDepts, sector 
+					$sql = "SELECT compID, name, city, studentRating, evaluatorRating, applicableDepts, sector, status
 							FROM company 
 							WHERE name LIKE '%$searchKey%'";
 				}
@@ -219,9 +219,14 @@
 				    echo "<table class=\"company_table\">"; // start a table tag in the HTML
 				    echo "<tr> <th>ID</th> <th>Name</th> <th>City</th> <th>Student Rating</th> <th>Evaluator Rating</th> <th>App Depts.</th> <th>Sector</th> <th>Actions</th></tr>";
 				    while($row = mysqli_fetch_assoc($result)) {
-						echo "<tr><td>" . $row['compID'] . "</td><td>" . $row['name'] . "</td><td>" . $row['city'] . "</td><td>"
-						. $row['studentRating'] . "</td><td>" . $row['evaluatorRating'] . "</td><td>" . $row['applicableDepts'] . "</td><td>" . $row['sector'] . 
-						"</td><td>" ."<a href=advisor_approve_util.php?compID=". $row["compID"] . "&userID=".$_SESSION["userID"]. ">Approve</a>"."</td></tr>";
+				    	if(strcmp($row['status'], "approved") == 0){
+				    		echo "<tr><td>" . $row['compID'] . "</td><td>" . $row['name'] . "</td><td>" . $row['city'] . "</td><td>"
+							. $row['studentRating'] . "</td><td>" . $row['evaluatorRating'] . "</td><td>" . $row['applicableDepts'] ."</td><td>" . $row['sector'] . "</td><td>" ."N/A"."</td></tr>";
+				    	}else{
+				    		echo "<tr><td>" . $row['compID'] . "</td><td>" . $row['name'] . "</td><td>" . $row['city'] . "</td><td>"
+							. $row['studentRating'] . "</td><td>" . $row['evaluatorRating'] . "</td><td>" . $row['applicableDepts'] . "</td><td>" . $row['sector'] . 
+							"</td><td>" ."<a href=advisor_approve_util.php?compID=". $row["compID"] . "&userID=".$_SESSION["userID"]. ">Approve</a>"."</td></tr>";
+				    	}
 				    }
 				echo "</table>";
 				} else {

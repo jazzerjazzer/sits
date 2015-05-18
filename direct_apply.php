@@ -180,7 +180,6 @@
 					echo "<input name = end type=\"date\" />";
 					echo "</form>";
 					$userID = $_GET['userID'];
-					
 					if(isset($_POST['apply'])){
 						
 						$startDate = date('Y-m-d', strtotime($_POST['start']));
@@ -223,10 +222,7 @@
 								
 								mysqli_query($conn, $onlyUpdateDirectApply);
 							}
-							
-							
 						    echo "} else {";
-						    echo "alert(\"NO\")";    
 						    echo "}";
 							echo "</script>\n\n";
 						}else{
@@ -246,7 +242,7 @@
 								}
 							} else {
 							    echo "Error adding record: " . $conn->error;
-								header('location:application.php?result=3');
+								header('location:applications.php?result=3');
 							}
 						}
 					}
