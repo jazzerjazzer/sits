@@ -216,7 +216,7 @@
 								. $row['internshipStartDate'] . "</td><td>" . $row['internshipEndDate'] . "</td><td>" . $row['qcount'] . "</td><td>" . $row['quotaAmount'] . "</td><td>" . $row['status'] . "</td><td>".  $row['availableYears'] . 
 									"</td><td>"."<a href=quota_apply.php?quotaID=". $row["quotaID"] . "&compID=". $row["compID"] . "&userID=".$userID. ">Apply</a>"."</td></tr>"; 
 							}
-							mysqli_data_seek($appliedQuotaResult, 1);
+							mysqli_data_seek($appliedQuotaResult, 0);
 					    }
 					}
 					if(mysqli_num_rows($result2) > 0){
