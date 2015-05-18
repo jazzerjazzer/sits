@@ -158,7 +158,6 @@
 					    }
 					}
 				}
-			
 				$sql="SELECT DISTINCT city FROM company order by city"; 
 				$result = mysqli_query($conn, $sql);
 				echo "<div class=\"menu_table_container\">";
@@ -175,6 +174,7 @@
 				echo "<div class=\"menu_comp\">";
 				echo "<button type=\"submit\" name=\"drop_losers\">Drop Loser Apps</button>";
 				echo "</div>";
+
 				echo "</div>";
 
 				$directApplyQuery = "SELECT pName, surname, studentID, company.compID, application.appID, company.name, approval FROM company, person, directApply, application WHERE application.approval = \"not approved\" AND application.appID = directApply.appID AND person.userID = directApply.studentID AND directApply.compID = company.compID";
@@ -188,8 +188,10 @@
 
 				$directApplyResult = mysqli_query($conn, $directApplyQuery);
 				$quotaApplyResult = mysqli_query($conn, $quotaApplyQuery);
-
+				echo "<br><h3> Applications Waiting for Approval</h3>";
+				echo "<hr>";
 				echo "<div class=\"table_container\">";
+
 				echo "<table class=\"company_table\">"; 
 			    echo "<tr> <th>Application ID</th> <th>Student Name</th> <th>Surname</th> <th>Student ID</th> <th>Company ID</th> <th>Company Name</th> <th>Actions</th></tr>";
 				if (mysqli_num_rows($directApplyResult) > 0) {
@@ -206,11 +208,26 @@
 				    	}else{
 				    		echo "<tr><td>" . $row['appID'] . "</td><td>" . $row['pName'] . "</td><td>" . $row['surname'] . "</td><td>". $row['studentID'] . "</td><td>" . $row['compID'] . "</td><td>" . $row['name'] ."</td><td>" . "N/A"."</td></tr>";
 				    	}
-			    		
 				    }
 				}
 				echo "</table>";
+
+				echo "<h3> Applications Waiting for Announcement</h3>";
+				echo "<hr>";
+				$quotaApplyQuery2 = "SELECT quotaID, pName, surname, studentID, company.compID, application.appID, company.name, drawResult FROM company, person, quotaApply, application WHERE quotaApply.drawResult = 1 AND application.approval = \"approved\" AND application.appID = quotaApply.appID AND person.userID = quotaApply.studentID AND quotaApply.compID = company.compID AND quotaApply.announced = 0";
+
+				$quotaApplyResult2 = mysqli_query($conn, $quotaApplyQuery2);
 				
+				echo "<table class=\"company_table\">"; 
+			    echo "<tr> <th>Application ID</th> <th>Student Name</th> <th>Surname</th> <th>Student ID</th> <th>Company ID</th> <th>Company Name</th> <th>Actions</th></tr>";
+				if (mysqli_num_rows($quotaApplyResult2) > 0) {
+				    
+				    while($row = mysqli_fetch_assoc($quotaApplyResult2)) {
+			    		echo "<tr><td>" . $row['appID'] . "</td><td>" . $row['pName'] . "</td><td>" . $row['surname'] . "</td><td>". $row['studentID'] . "</td><td>" . $row['compID'] . "</td><td>" . $row['name'] ."</td><td>" . "<a href=app_fb_announce.php?appID=". $row['appID'] ."&studentID=".$row['studentID']. "&secID=".$usr. ">Make Feedback Announcement</a>"."</td></tr>";
+				    }
+				} 
+				echo "</table>";
+
 				echo "</div>";
 				echo "</div>";
 				mysqli_close($conn);
