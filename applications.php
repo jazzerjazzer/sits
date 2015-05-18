@@ -159,6 +159,8 @@
 					echo "direct apply error <br>";					
 				}elseif($result_cancel_application == 6){
 					echo "first apply success <br>";					
+				}elseif($result_cancel_application == 6){
+					echo "update apply success <br>";					
 				}
 				$result = mysqli_query($conn, $sql);
 				echo "<h2>Quota Applications </h2>";
