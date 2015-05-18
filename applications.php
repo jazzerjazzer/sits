@@ -153,6 +153,12 @@
 				$result_cancel_application = $_GET['result'];
 				if($result_cancel_application == 2){
 					echo "canceled succefully <br>";
+				}elseif($result_cancel_application == 4){
+					echo "updated succefully <br>";
+				}elseif($result_cancel_application == 3){
+					echo "direct apply error <br>";					
+				}elseif($result_cancel_application == 6){
+					echo "first apply success <br>";					
 				}
 				$result = mysqli_query($conn, $sql);
 				echo "<div class=\"table_container\">";

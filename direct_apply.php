@@ -182,35 +182,72 @@
 					$userID = $_GET['userID'];
 					
 					if(isset($_POST['apply'])){
-						/*echo "<script type=\"text/javascript\">myFunction();</script>";
-
-						$sql = "SELECT appID FROM directApply WHERE studentID = '$userID'";
-						$result = mysqli_query($conn, $sql);
-						$rows = mysqli_num_rows($result);
-						if ($rows > 0) {
-							$sql = "UPDATE directApply SET compID = '$compID', studentID = '$userID', internshipStartDate = '$startDate', internshipEndDate = '$endDate' WHERE studentID = '$userID'";
-							echo '<script type="text/javascript">myFunction();</script>';
-						}*/
 						
-						$sql = "INSERT INTO application VALUES (DEFAULT, DEFAULT, \"not approved\", \"directApply\", NULL)";
 						$startDate = date('Y-m-d', strtotime($_POST['start']));
 						$endDate = date('Y-m-d', strtotime($_POST['end']));
+						
+						$directApplyAmount = "SELECT appID FROM directApply WHERE studentID = '$userID'";
+						$quotaApplyAmount = "SELECT appID FROM quotaApply WHERE studentID = '$userID'";
+						
+						$directApplyAmountResult = mysqli_query($conn, $directApplyAmount);
+						$directApplyRows = mysqli_num_rows($directApplyAmountResult);
 
-						if ($conn->query($sql) == TRUE) {
-						    $sql = "UPDATE directApply SET compID = '$compID', studentID = '$userID', internshipStartDate = '$startDate', internshipEndDate = '$endDate' WHERE compID IS NULL AND studentID IS NULL";
+						$quotaApplyAmountResult = mysqli_query($conn, $quotaApplyAmount);
+						$quotaApplyRows = mysqli_num_rows($quotaApplyAmountResult);
+
+						if ($directApplyRows > 0 || $quotaApplyRows > 0) {
+
+							echo "<script type=\"text/javascript\">\n";
+							echo "if (confirm(\"Drop other applications?\") == true) {";
 							
-							if ($conn->query($sql) == TRUE) {
-								$sql = "SELECT appID FROM directApply WHERE studentID = '$userID'";
-								$result = mysqli_query($conn, $sql);
-								$row = mysqli_fetch_assoc($result);
-								$appID = $row['appID'];
-								header('location:application.php?result=2&appID='.$appID);
-							}else{
-								header('location:application.php?result=1');
+							$delQuota = "SELECT appID FROM quotaApply WHERE studentID = '$userID'";
+							$delQuotaResult = mysqli_query($conn, $delQuota);
+							if (mysqli_num_rows($delQuotaResult) > 0) {
+						   
+								while($delQuotaRow = mysqli_fetch_assoc($delQuotaResult)) {
+									$deleteQuotas = "DELETE FROM application WHERE appID = '$delQuotaRow[appID]'";
+									mysqli_query($conn, $deleteQuotas);
+								}
 							}
-						} else {
-						    echo "Error adding record: " . $conn->error;
-							header('location:application.php?result=1');
+
+							if($directApplyRows == 0){
+								$newDirectApply = "INSERT INTO application VALUES (DEFAULT, DEFAULT, \"not approved\", \"directApply\", NULL)";
+								$updateNewDirectApply = "UPDATE directApply SET compID = '$compID', studentID = '$userID', 
+								internshipStartDate = '$startDate', internshipEndDate = '$endDate', studentID = '$userID' WHERE studentID IS NULL AND compID IS NULL";
+								
+								mysqli_query($conn, $newDirectApply);
+								mysqli_query($conn, $updateNewDirectApply);
+							}else{
+								$onlyUpdateDirectApply = "UPDATE directApply SET compID = '$compID', studentID = '$userID', 
+									internshipStartDate = '$startDate', internshipEndDate = '$endDate', studentID = '$userID' WHERE studentID = '$userID'";
+								
+								mysqli_query($conn, $onlyUpdateDirectApply);
+							}
+							
+							
+						    echo "} else {";
+						    echo "alert(\"NO\")";    
+						    echo "}";
+							echo "</script>\n\n";
+						}else{
+							$firstDirectApply = "INSERT INTO application VALUES (DEFAULT, DEFAULT, \"not approved\", \"directApply\", NULL)";
+							
+							if ($conn->query($firstDirectApply) == TRUE) {
+							    $updateFirstDirectApply = "UPDATE directApply SET compID = '$compID', studentID = '$userID', internshipStartDate = '$startDate', internshipEndDate = '$endDate' WHERE compID IS NULL AND studentID IS NULL";
+								
+								if ($conn->query($updateFirstDirectApply) == TRUE) {
+									$getAppID = "SELECT appID FROM directApply WHERE studentID = '$userID'";
+									$appIDResult = mysqli_query($conn, $getAppID);
+									$appIDRow = mysqli_fetch_assoc($appIDResult);
+									$appID = $appIDRow['appID'];
+									header('location:applications.php?result=6&appID='.$appID);
+								}else{
+									header('location:applications.php?result=3');
+								}
+							} else {
+							    echo "Error adding record: " . $conn->error;
+								header('location:application.php?result=3');
+							}
 						}
 					}
 	            ?>
