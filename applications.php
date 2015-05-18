@@ -172,9 +172,29 @@
 				}
 				
 					echo "</table>"; 
+
 				} else {
 				    echo "0 results";
 				}
+				echo "<h2>Direct Applications </h2>";
+				echo "<hr>";
+
+				$sql = "SELECT application.appID, approval, name, city, internshipStartDate, internshipEndDate 
+						FROM directApply, application, company 
+						WHERE directApply.appID = application.appID AND directApply.compID = company.compID AND studentID = '$userID'";
+
+				$result = mysqli_query($conn, $sql);
+				if (mysqli_num_rows($result) > 0) {
+				    echo "<table class=\"company_table\">"; 
+				    echo "<tr> <th>Company Name</th> <th>City</th> <th>Internship Start Date</th> <th>Internship End Date</th> <th>Approval</th>  <th>Actions</th></tr>";
+				    while($row = mysqli_fetch_assoc($result)) {
+						echo "<tr><td>" . $row['name'] . "</td><td>" . $row['city'] . "</td><td>" . $row['internshipStartDate'] . "</td><td>"
+						. $row['internshipEndDate'] . "</td><td>" . $row['approval']. "</td><td>". "<a href=quota_cancel.php?appID=". $row["appID"] . ">Cancel Application</a>"."</td></tr>";
+					}									
+					echo "</table>"; 
+
+				}
+
 				echo "</div>";
 				mysqli_close($conn);
 				
