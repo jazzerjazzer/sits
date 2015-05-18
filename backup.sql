@@ -1,572 +1,198 @@
--- MySQL dump 10.13  Distrib 5.5.41, for debian-linux-gnu (x86_64)
---
--- Host: localhost    Database: project
--- ------------------------------------------------------
--- Server version	5.5.41-0ubuntu0.14.04.1
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
---
--- Table structure for table `announcement`
---
-
-DROP TABLE IF EXISTS `announcement`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `announcement` (
-  `announcementID` int(11) NOT NULL AUTO_INCREMENT,
-  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`announcementID`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `announcement`
---
-
-LOCK TABLES `announcement` WRITE;
-/*!40000 ALTER TABLE `announcement` DISABLE KEYS */;
-INSERT INTO `announcement` VALUES (1,'2015-05-13 16:03:37');
-/*!40000 ALTER TABLE `announcement` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `appFeedbackAnnouncement`
---
-
-DROP TABLE IF EXISTS `appFeedbackAnnouncement`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `appFeedbackAnnouncement` (
-  `announcementID` int(11) NOT NULL,
-  `studentApproval` char(3) DEFAULT NULL,
-  `deadline` date DEFAULT NULL,
-  `secretaryID` int(11) DEFAULT NULL,
-  `studentID` int(11) DEFAULT NULL,
-  PRIMARY KEY (`announcementID`),
-  KEY `secretaryID` (`secretaryID`),
-  KEY `studentID` (`studentID`),
-  CONSTRAINT `appFeedbackAnnouncement_ibfk_1` FOREIGN KEY (`announcementID`) REFERENCES `announcement` (`announcementID`),
-  CONSTRAINT `appFeedbackAnnouncement_ibfk_2` FOREIGN KEY (`secretaryID`) REFERENCES `secretary` (`userID`),
-  CONSTRAINT `appFeedbackAnnouncement_ibfk_3` FOREIGN KEY (`studentID`) REFERENCES `student` (`userID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `appFeedbackAnnouncement`
---
-
-LOCK TABLES `appFeedbackAnnouncement` WRITE;
-/*!40000 ALTER TABLE `appFeedbackAnnouncement` DISABLE KEYS */;
-/*!40000 ALTER TABLE `appFeedbackAnnouncement` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `application`
---
-
-DROP TABLE IF EXISTS `application`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `application` (
-  `appID` int(11) NOT NULL AUTO_INCREMENT,
-  `appSubmitDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `approval` char(12) DEFAULT NULL,
-  `appType` char(12) DEFAULT NULL,
-  `secretaryID` int(11) DEFAULT NULL,
-  PRIMARY KEY (`appID`),
-  KEY `secretaryID` (`secretaryID`),
-  CONSTRAINT `application_ibfk_1` FOREIGN KEY (`secretaryID`) REFERENCES `secretary` (`userID`)
-) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `application`
---
-
-LOCK TABLES `application` WRITE;
-/*!40000 ALTER TABLE `application` DISABLE KEYS */;
-INSERT INTO `application` VALUES (49,'2015-05-17 14:10:37','notApproved','directApply',4),(51,'2015-05-17 14:12:08','not approved','directApply',NULL),(52,'2015-05-17 14:15:40','not approved','directApply',NULL),(53,'2015-05-17 14:32:53','not approved','directApply',NULL),(54,'2015-05-17 15:04:44','not approved','directApply',NULL);
-/*!40000 ALTER TABLE `application` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = latin1 */ ;
-/*!50003 SET character_set_results = latin1 */ ;
-/*!50003 SET collation_connection  = latin1_swedish_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = '' */ ;
-DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `newApplication` AFTER INSERT ON `application` FOR EACH ROW IF NEW.appType = "directApply" THEN
-  INSERT INTO directApply VALUES (NEW.appID, null, null, null, null);
-ELSE
-  INSERT INTO quotaApply VALUES (NEW.appID, null, null, null, 0);
-END IF */;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = latin1 */ ;
-/*!50003 SET character_set_results = latin1 */ ;
-/*!50003 SET collation_connection  = latin1_swedish_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = '' */ ;
-DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `removeApplication` BEFORE DELETE ON `application` FOR EACH ROW IF OLD.appType = "directApply" THEN
-  DELETE FROM directApply WHERE appID = OLD.appID;
-ELSE
-  DELETE FROM quotaApply WHERE appID = OLD.appID;
-END IF */;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-
---
--- Table structure for table `company`
---
-
-DROP TABLE IF EXISTS `company`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `company` (
-  `compID` int(11) NOT NULL AUTO_INCREMENT,
-  `name` char(100) CHARACTER SET latin1 NOT NULL,
-  `password` char(12) CHARACTER SET latin1 DEFAULT '',
-  `address` char(100) CHARACTER SET latin1 DEFAULT NULL,
-  `phone` char(15) CHARACTER SET latin1 DEFAULT NULL,
-  `applicableDepts` char(30) CHARACTER SET latin1 DEFAULT NULL,
-  `status` char(15) CHARACTER SET latin1 NOT NULL DEFAULT '',
-  `supervisorName` char(30) CHARACTER SET latin1 DEFAULT NULL,
-  `supervisorPhone` char(15) CHARACTER SET latin1 DEFAULT NULL,
-  `city` char(20) CHARACTER SET latin1 DEFAULT NULL,
-  `country` char(20) CHARACTER SET latin1 DEFAULT NULL,
-  `evaluatorRating` int(11) DEFAULT NULL,
-  `studentRating` int(11) DEFAULT NULL,
-  `sector` char(20) CHARACTER SET latin1 DEFAULT NULL,
-  PRIMARY KEY (`compID`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf32;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `company`
---
-
-LOCK TABLES `company` WRITE;
-/*!40000 ALTER TABLE `company` DISABLE KEYS */;
-INSERT INTO `company` VALUES (1,'Pictrum','','kizilay','123 45 68','eee','approved',NULL,NULL,'Ankara','Türkiye',2,2,'IT'),(2,'Piramit','','ulus','455 53 57','eee','approved',NULL,NULL,'Ankara','Türkiye',3,3,'yazilim'),(3,'Piksel','','eryaman','458 75 78','cs','approved',NULL,NULL,'Amsterdam','netherlands',1,1,'oyun'),(4,'TAI',NULL,'ankara','0312-256 85 42',NULL,'approved',NULL,NULL,'ankara','Ankara',NULL,NULL,'ucak sanayi'),(5,'Aselsan',NULL,'kazan','123 21 35','eee','approved',NULL,NULL,'Ankara','netherlands',NULL,NULL,'savunma'),(6,'obss',NULL,'istanbul','0216-385 74 45',NULL,'approved',NULL,NULL,'Ankara','Türkiye',NULL,NULL,'yazilim'),(7,'Havelsan',NULL,'Odtu','0312-586 79 90','cs','approved',NULL,NULL,'istanbul','Ankara',NULL,NULL,'havacilik'),(14,'Eltas','i5CgIxRr','Turgut Reis Caddesi, No: 27/2, Tandogan','0312 222 22 22',NULL,'approved',NULL,NULL,'Ankara','Türkiye',NULL,NULL,'Elektrik-Elektronik'),(15,'Comodo','ZZW4iPPf','Teknokent','444 4 444',NULL,'approved',NULL,NULL,'Ankara','Türkiye',NULL,NULL,'CS'),(16,'SimSoft','','Teknokent','528 23 34',NULL,'approved',NULL,NULL,'Ankara','Türkiye',NULL,NULL,'Yazilim');
-/*!40000 ALTER TABLE `company` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8 */ ;
-/*!50003 SET character_set_results = utf8 */ ;
-/*!50003 SET collation_connection  = utf8_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = '' */ ;
-DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `project`.`advisor_approval` AFTER UPDATE
-    ON project.company FOR EACH ROW
-BEGIN
-IF 
-NEW.status = "approved" AND OLD.status = "not approved" THEN
-INSERT INTO registeredCompany VALUES (OLD.compID,DEFAULT);
-END IF;
-END */;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-
---
--- Table structure for table `department`
---
-
-DROP TABLE IF EXISTS `department`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `department` (
-  `deptName` char(5) NOT NULL,
-  `facultyName` char(30) DEFAULT NULL,
-  PRIMARY KEY (`deptName`),
-  KEY `facultyName` (`facultyName`),
-  CONSTRAINT `department_ibfk_1` FOREIGN KEY (`facultyName`) REFERENCES `faculty` (`facultyName`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `department`
---
-
-LOCK TABLES `department` WRITE;
-/*!40000 ALTER TABLE `department` DISABLE KEYS */;
-INSERT INTO `department` VALUES ('CS','Engineering');
-/*!40000 ALTER TABLE `department` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `directApply`
---
-
-DROP TABLE IF EXISTS `directApply`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `directApply` (
-  `appID` int(11) NOT NULL,
-  `compID` int(11) DEFAULT NULL,
-  `studentID` int(11) DEFAULT NULL,
-  `internshipStartDate` date DEFAULT NULL,
-  `internshipEndDate` date DEFAULT NULL,
-  PRIMARY KEY (`appID`),
-  KEY `compID` (`compID`),
-  KEY `studentID` (`studentID`),
-  CONSTRAINT `directApply_ibfk_1` FOREIGN KEY (`appID`) REFERENCES `application` (`appID`),
-  CONSTRAINT `directApply_ibfk_2` FOREIGN KEY (`compID`) REFERENCES `registeredCompany` (`compID`),
-  CONSTRAINT `directApply_ibfk_3` FOREIGN KEY (`studentID`) REFERENCES `student` (`userID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `directApply`
---
-
-LOCK TABLES `directApply` WRITE;
-/*!40000 ALTER TABLE `directApply` DISABLE KEYS */;
-INSERT INTO `directApply` VALUES (49,1,2,NULL,NULL),(51,2,2,'1969-12-31','1969-12-31'),(52,3,2,'1969-12-31','1969-12-31'),(53,3,2,'1969-12-31','1969-12-31'),(54,3,2,'1969-12-31','1969-12-31');
-/*!40000 ALTER TABLE `directApply` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `faculty`
---
-
-DROP TABLE IF EXISTS `faculty`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `faculty` (
-  `facultyName` char(30) NOT NULL,
-  PRIMARY KEY (`facultyName`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `faculty`
---
-
-LOCK TABLES `faculty` WRITE;
-/*!40000 ALTER TABLE `faculty` DISABLE KEYS */;
-INSERT INTO `faculty` VALUES ('Engineering');
-/*!40000 ALTER TABLE `faculty` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `generalAnnouncement`
---
-
-DROP TABLE IF EXISTS `generalAnnouncement`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `generalAnnouncement` (
-  `announcementID` int(11) NOT NULL,
-  `title` char(30) DEFAULT NULL,
-  `message` varchar(7000) DEFAULT NULL,
-  `secretaryID` int(11) DEFAULT NULL,
-  PRIMARY KEY (`announcementID`),
-  KEY `secretaryID` (`secretaryID`),
-  CONSTRAINT `generalAnnouncement_ibfk_1` FOREIGN KEY (`announcementID`) REFERENCES `announcement` (`announcementID`),
-  CONSTRAINT `generalAnnouncement_ibfk_2` FOREIGN KEY (`secretaryID`) REFERENCES `secretary` (`userID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `generalAnnouncement`
---
-
-LOCK TABLES `generalAnnouncement` WRITE;
-/*!40000 ALTER TABLE `generalAnnouncement` DISABLE KEYS */;
-INSERT INTO `generalAnnouncement` VALUES (1,'deneme','deniyoruz',4);
-/*!40000 ALTER TABLE `generalAnnouncement` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `opens`
---
-
-DROP TABLE IF EXISTS `opens`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `opens` (
-  `quotaID` int(11) DEFAULT NULL,
-  `compID` int(11) DEFAULT NULL,
-  `deptName` char(5) DEFAULT NULL,
-  KEY `quotaID` (`quotaID`),
-  KEY `compID` (`compID`),
-  KEY `deptName` (`deptName`),
-  CONSTRAINT `opens_ibfk_1` FOREIGN KEY (`quotaID`) REFERENCES `quota` (`quotaID`),
-  CONSTRAINT `opens_ibfk_2` FOREIGN KEY (`compID`) REFERENCES `registeredCompany` (`compID`),
-  CONSTRAINT `opens_ibfk_3` FOREIGN KEY (`deptName`) REFERENCES `department` (`deptName`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `opens`
---
-
-LOCK TABLES `opens` WRITE;
-/*!40000 ALTER TABLE `opens` DISABLE KEYS */;
-INSERT INTO `opens` VALUES (1,1,'cs');
-/*!40000 ALTER TABLE `opens` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `person`
---
-
-DROP TABLE IF EXISTS `person`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `person` (
-  `userID` int(11) NOT NULL AUTO_INCREMENT,
-  `name` char(100) CHARACTER SET latin1 NOT NULL,
-  `surname` char(100) CHARACTER SET latin1 NOT NULL,
-  `password` char(12) CHARACTER SET latin1 NOT NULL,
-  `phone` char(15) CHARACTER SET latin1 DEFAULT NULL,
-  `deptName` char(5) CHARACTER SET latin1 DEFAULT NULL,
-  `userType` char(20) CHARACTER SET latin1 NOT NULL DEFAULT '',
-  PRIMARY KEY (`userID`),
-  KEY `deptName` (`deptName`),
-  CONSTRAINT `person_ibfk_1` FOREIGN KEY (`deptName`) REFERENCES `department` (`deptName`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin5;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `person`
---
-
-LOCK TABLES `person` WRITE;
-/*!40000 ALTER TABLE `person` DISABLE KEYS */;
-INSERT INTO `person` VALUES (1,'sinem','sav','12345678','123123','CS','student'),(2,'can','akgün','12345678','564564563','CS','student'),(3,'dogancan','demirtas','12345678','3452452353','CS','student'),(4,'ebru','ates','12345678','468541324','CS','secretary'),(7,'selim','aksoy','12345678','1234684321','CS','advisor');
-/*!40000 ALTER TABLE `person` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `quota`
---
-
-DROP TABLE IF EXISTS `quota`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `quota` (
-  `quotaID` int(11) NOT NULL AUTO_INCREMENT,
-  `generalAnnouncementID` int(11) DEFAULT NULL,
-  `compID` int(11) DEFAULT NULL,
-  `internshipDuration` int(11) NOT NULL,
-  `internshipStartDate` date NOT NULL,
-  `internshipEndDate` date NOT NULL,
-  `availableYears` int(11) NOT NULL,
-  `status` char(30) DEFAULT NULL,
-  `quotaAmount` int(11) NOT NULL,
-  `quotaDeadline` date NOT NULL,
-  PRIMARY KEY (`quotaID`),
-  KEY `generalAnnouncementID` (`generalAnnouncementID`),
-  KEY `compID` (`compID`),
-  CONSTRAINT `quota_ibfk_1` FOREIGN KEY (`generalAnnouncementID`) REFERENCES `generalAnnouncement` (`announcementID`),
-  CONSTRAINT `quota_ibfk_2` FOREIGN KEY (`compID`) REFERENCES `company` (`compID`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `quota`
---
-
-LOCK TABLES `quota` WRITE;
-/*!40000 ALTER TABLE `quota` DISABLE KEYS */;
-INSERT INTO `quota` VALUES (1,1,1,30,'2015-06-01','2015-07-01',3,'waiting for first drawal',5,'2015-05-01');
-/*!40000 ALTER TABLE `quota` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `quotaApply`
---
-
-DROP TABLE IF EXISTS `quotaApply`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `quotaApply` (
-  `appID` int(11) NOT NULL,
-  `quotaID` int(11) DEFAULT NULL,
-  `compID` int(11) DEFAULT NULL,
-  `studentID` int(11) DEFAULT NULL,
-  `drawResult` int(11) DEFAULT NULL,
-  PRIMARY KEY (`appID`),
-  KEY `quotaID` (`quotaID`),
-  KEY `compID` (`compID`),
-  KEY `studentID` (`studentID`),
-  CONSTRAINT `quotaApply_ibfk_1` FOREIGN KEY (`appID`) REFERENCES `application` (`appID`),
-  CONSTRAINT `quotaApply_ibfk_2` FOREIGN KEY (`quotaID`) REFERENCES `quota` (`quotaID`),
-  CONSTRAINT `quotaApply_ibfk_3` FOREIGN KEY (`compID`) REFERENCES `registeredCompany` (`compID`),
-  CONSTRAINT `quotaApply_ibfk_4` FOREIGN KEY (`studentID`) REFERENCES `student` (`userID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `quotaApply`
---
-
-LOCK TABLES `quotaApply` WRITE;
-/*!40000 ALTER TABLE `quotaApply` DISABLE KEYS */;
-/*!40000 ALTER TABLE `quotaApply` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `registeredCompany`
---
-
-DROP TABLE IF EXISTS `registeredCompany`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `registeredCompany` (
-  `compID` int(11) NOT NULL,
-  `registrationDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`compID`),
-  CONSTRAINT `registeredCompany_ibfk_1` FOREIGN KEY (`compID`) REFERENCES `company` (`compID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `registeredCompany`
---
-
-LOCK TABLES `registeredCompany` WRITE;
-/*!40000 ALTER TABLE `registeredCompany` DISABLE KEYS */;
-INSERT INTO `registeredCompany` VALUES (1,'2015-05-16 14:56:20'),(2,'2015-05-16 15:19:38'),(3,'2015-05-16 15:19:56'),(4,'2015-05-16 15:19:59'),(5,'2015-05-16 15:20:02'),(6,'2015-05-17 16:19:29'),(7,'2015-05-16 15:20:04'),(14,'2015-05-17 16:22:35'),(15,'2015-05-17 16:20:43'),(16,'2015-05-17 15:40:13');
-/*!40000 ALTER TABLE `registeredCompany` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `secretary`
---
-
-DROP TABLE IF EXISTS `secretary`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `secretary` (
-  `userID` int(11) NOT NULL,
-  PRIMARY KEY (`userID`),
-  CONSTRAINT `secretary_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `person` (`userID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `secretary`
---
-
-LOCK TABLES `secretary` WRITE;
-/*!40000 ALTER TABLE `secretary` DISABLE KEYS */;
-INSERT INTO `secretary` VALUES (4);
-/*!40000 ALTER TABLE `secretary` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `selfFoundCompany`
---
-
-DROP TABLE IF EXISTS `selfFoundCompany`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `selfFoundCompany` (
-  `compID` int(11) NOT NULL,
-  `advisorID` int(11) DEFAULT NULL,
-  PRIMARY KEY (`compID`),
-  KEY `advisorID` (`advisorID`),
-  CONSTRAINT `selfFoundCompany_ibfk_1` FOREIGN KEY (`compID`) REFERENCES `company` (`compID`),
-  CONSTRAINT `selfFoundCompany_ibfk_2` FOREIGN KEY (`advisorID`) REFERENCES `studentAdvisor` (`userID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `selfFoundCompany`
---
-
-LOCK TABLES `selfFoundCompany` WRITE;
-/*!40000 ALTER TABLE `selfFoundCompany` DISABLE KEYS */;
-INSERT INTO `selfFoundCompany` VALUES (6,7);
-/*!40000 ALTER TABLE `selfFoundCompany` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `student`
---
-
-DROP TABLE IF EXISTS `student`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `student` (
-  `userID` int(11) NOT NULL,
-  `cgpa` float DEFAULT NULL,
-  PRIMARY KEY (`userID`),
-  CONSTRAINT `student_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `person` (`userID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin5;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `student`
---
-
-LOCK TABLES `student` WRITE;
-/*!40000 ALTER TABLE `student` DISABLE KEYS */;
-INSERT INTO `student` VALUES (1,3.5),(2,3.1),(3,3.2);
-/*!40000 ALTER TABLE `student` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `studentAdvisor`
---
-
-DROP TABLE IF EXISTS `studentAdvisor`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `studentAdvisor` (
-  `userID` int(11) NOT NULL,
-  PRIMARY KEY (`userID`),
-  CONSTRAINT `studentAdvisor_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `person` (`userID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `studentAdvisor`
---
-
-LOCK TABLES `studentAdvisor` WRITE;
-/*!40000 ALTER TABLE `studentAdvisor` DISABLE KEYS */;
-INSERT INTO `studentAdvisor` VALUES (7);
-/*!40000 ALTER TABLE `studentAdvisor` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
-
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2015-05-17 12:23:03
+mysql  Ver 14.14 Distrib 5.5.41, for debian-linux-gnu (x86_64) using readline 6.3
+Copyright (c) 2000, 2014, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Usage: mysql [OPTIONS] [database]
+  -?, --help          Display this help and exit.
+  -I, --help          Synonym for -?
+  --auto-rehash       Enable automatic rehashing. One doesn't need to use
+                      'rehash' to get table and field completion, but startup
+                      and reconnecting may take a longer time. Disable with
+                      --disable-auto-rehash.
+                      (Defaults to on; use --skip-auto-rehash to disable.)
+  -A, --no-auto-rehash 
+                      No automatic rehashing. One has to use 'rehash' to get
+                      table and field completion. This gives a quicker start of
+                      mysql and disables rehashing on reconnect.
+  --auto-vertical-output 
+                      Automatically switch to vertical output mode if the
+                      result is wider than the terminal width.
+  -B, --batch         Don't use history file. Disable interactive behavior.
+                      (Enables --silent.)
+  --character-sets-dir=name 
+                      Directory for character set files.
+  --column-type-info  Display column type information.
+  -c, --comments      Preserve comments. Send comments to the server. The
+                      default is --skip-comments (discard comments), enable
+                      with --comments.
+  -C, --compress      Use compression in server/client protocol.
+  -#, --debug[=#]     This is a non-debug version. Catch this and exit.
+  --debug-check       Check memory and open file usage at exit.
+  -T, --debug-info    Print some debug info at exit.
+  -D, --database=name Database to use.
+  --default-character-set=name 
+                      Set the default character set.
+  --delimiter=name    Delimiter to be used.
+  --enable-cleartext-plugin 
+                      Enable/disable the clear text authentication plugin.
+  -e, --execute=name  Execute command and quit. (Disables --force and history
+                      file.)
+  -E, --vertical      Print the output of a query (rows) vertically.
+  -f, --force         Continue even if we get an SQL error.
+  -G, --named-commands 
+                      Enable named commands. Named commands mean this program's
+                      internal commands; see mysql> help . When enabled, the
+                      named commands can be used from any line of the query,
+                      otherwise only from the first line, before an enter.
+                      Disable with --disable-named-commands. This option is
+                      disabled by default.
+  -i, --ignore-spaces Ignore space after function names.
+  --init-command=name SQL Command to execute when connecting to MySQL server.
+                      Will automatically be re-executed when reconnecting.
+  --local-infile      Enable/disable LOAD DATA LOCAL INFILE.
+  -b, --no-beep       Turn off beep on error.
+  -h, --host=name     Connect to host.
+  -H, --html          Produce HTML output.
+  -X, --xml           Produce XML output.
+  --line-numbers      Write line numbers for errors.
+                      (Defaults to on; use --skip-line-numbers to disable.)
+  -L, --skip-line-numbers 
+                      Don't write line number for errors.
+  -n, --unbuffered    Flush buffer after each query.
+  --column-names      Write column names in results.
+                      (Defaults to on; use --skip-column-names to disable.)
+  -N, --skip-column-names 
+                      Don't write column names in results.
+  --sigint-ignore     Ignore SIGINT (CTRL-C).
+  -o, --one-database  Ignore statements except those that occur while the
+                      default database is the one named at the command line.
+  --pager[=name]      Pager to use to display results. If you don't supply an
+                      option, the default pager is taken from your ENV variable
+                      PAGER. Valid pagers are less, more, cat [> filename],
+                      etc. See interactive help (\h) also. This option does not
+                      work in batch mode. Disable with --disable-pager. This
+                      option is disabled by default.
+  -p, --password[=name] 
+                      Password to use when connecting to server. If password is
+                      not given it's asked from the tty.
+  -P, --port=#        Port number to use for connection or 0 for default to, in
+                      order of preference, my.cnf, $MYSQL_TCP_PORT,
+                      /etc/services, built-in default (3306).
+  --prompt=name       Set the mysql prompt to this value.
+  --protocol=name     The protocol to use for connection (tcp, socket, pipe,
+                      memory).
+  -q, --quick         Don't cache result, print it row by row. This may slow
+                      down the server if the output is suspended. Doesn't use
+                      history file.
+  -r, --raw           Write fields without conversion. Used with --batch.
+  --reconnect         Reconnect if the connection is lost. Disable with
+                      --disable-reconnect. This option is enabled by default.
+                      (Defaults to on; use --skip-reconnect to disable.)
+  -s, --silent        Be more silent. Print results with a tab as separator,
+                      each row on new line.
+  -S, --socket=name   The socket file to use for connection.
+  --ssl               Enable SSL for connection (automatically enabled with
+                      other flags).
+  --ssl-ca=name       CA file in PEM format (check OpenSSL docs, implies
+                      --ssl).
+  --ssl-capath=name   CA directory (check OpenSSL docs, implies --ssl).
+  --ssl-cert=name     X509 cert in PEM format (implies --ssl).
+  --ssl-cipher=name   SSL cipher to use (implies --ssl).
+  --ssl-key=name      X509 key in PEM format (implies --ssl).
+  --ssl-verify-server-cert 
+                      Verify server's "Common Name" in its cert against
+                      hostname used when connecting. This option is disabled by
+                      default.
+  -t, --table         Output in table format.
+  --tee=name          Append everything into outfile. See interactive help (\h)
+                      also. Does not work in batch mode. Disable with
+                      --disable-tee. This option is disabled by default.
+  -u, --user=name     User for login if not current user.
+  -U, --safe-updates  Only allow UPDATE and DELETE that uses keys.
+  -U, --i-am-a-dummy  Synonym for option --safe-updates, -U.
+  -v, --verbose       Write more. (-v -v -v gives the table output format).
+  -V, --version       Output version information and exit.
+  -w, --wait          Wait and retry if connection is down.
+  --connect-timeout=# Number of seconds before connection timeout.
+  --max-allowed-packet=# 
+                      The maximum packet length to send to or receive from
+                      server.
+  --net-buffer-length=# 
+                      The buffer size for TCP/IP and socket communication.
+  --select-limit=#    Automatic limit for SELECT when using --safe-updates.
+  --max-join-size=#   Automatic limit for rows in a join when using
+                      --safe-updates.
+  --secure-auth       Refuse client connecting to server if it uses old
+                      (pre-4.1.1) protocol.
+  --server-arg=name   Send embedded server this as a parameter.
+  --show-warnings     Show warnings after every statement.
+  --plugin-dir=name   Directory for client-side plugins.
+  --default-auth=name Default authentication client-side plugin to use.
+
+Default options are read from the following files in the given order:
+/etc/my.cnf /etc/mysql/my.cnf /usr/etc/my.cnf ~/.my.cnf 
+The following groups are read: mysql client
+The following options may be given as the first argument:
+--print-defaults        Print the program argument list and exit.
+--no-defaults           Don't read default options from any option file.
+--defaults-file=#       Only read default options from the given file #.
+--defaults-extra-file=# Read this file after the global files are read.
+
+Variables (--variable-name=value)
+and boolean options {FALSE|TRUE}  Value (after reading options)
+--------------------------------- ----------------------------------------
+auto-rehash                       TRUE
+auto-vertical-output              FALSE
+character-sets-dir                (No default value)
+column-type-info                  FALSE
+comments                          FALSE
+compress                          FALSE
+debug-check                       FALSE
+debug-info                        FALSE
+database                          (No default value)
+default-character-set             auto
+delimiter                         ;
+enable-cleartext-plugin           FALSE
+vertical                          FALSE
+force                             FALSE
+named-commands                    FALSE
+ignore-spaces                     FALSE
+init-command                      (No default value)
+local-infile                      FALSE
+no-beep                           FALSE
+host                              (No default value)
+html                              FALSE
+xml                               FALSE
+line-numbers                      TRUE
+unbuffered                        FALSE
+column-names                      TRUE
+sigint-ignore                     FALSE
+port                              3306
+prompt                            mysql> 
+quick                             FALSE
+raw                               FALSE
+reconnect                         FALSE
+socket                            /var/run/mysqld/mysqld.sock
+ssl                               FALSE
+ssl-ca                            (No default value)
+ssl-capath                        (No default value)
+ssl-cert                          (No default value)
+ssl-cipher                        (No default value)
+ssl-key                           (No default value)
+ssl-verify-server-cert            FALSE
+table                             FALSE
+user                              root
+safe-updates                      FALSE
+i-am-a-dummy                      FALSE
+connect-timeout                   0
+max-allowed-packet                16777216
+net-buffer-length                 16384
+select-limit                      1000
+max-join-size                     1000000
+secure-auth                       FALSE
+show-warnings                     FALSE
+plugin-dir                        (No default value)
+default-auth                      (No default value)
