@@ -210,10 +210,12 @@
 				<?php
 					@session_start();
 					$usr = $_SESSION["userID"];
+					$userDept = $_SESSION["userDept"];
+
 					echo "<p>$usr</p>";
-					echo "<p>CS</p>";
+					echo "<p>$userDept</p>";
 				?>
-				<p>Logout</p>
+				<p><a href='logout.php'>Logout</a></p>
 			</div>
 
 			<div id="menu_buttons">

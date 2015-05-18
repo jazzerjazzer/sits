@@ -282,12 +282,14 @@
 			<div id="nav">
 				<div id="user_info">
 					<?php
-						@session_start();
-						$usr = $_SESSION["userID"];
-						echo "<p>$usr</p>";
-						echo "<p>CS</p>";
-					?>
-					<p>Logout</p>
+					@session_start();
+					$usr = $_SESSION["userID"];
+					$userDept = $_SESSION["userDept"];
+
+					echo "<p>$usr</p>";
+					echo "<p>$userDept</p>";
+				?>
+				<p><a href='logout.php'>Logout</a></p>
 				</div>
 
 				<div id="menu_buttons">
