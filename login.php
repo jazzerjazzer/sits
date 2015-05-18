@@ -66,7 +66,7 @@ if(isset($_POST['login'])){
     <div class="login">
       <h1>Login to SITS</h1>
       <form name="Form" method="post" onsubmit="return validateForm()" action="#">
-        <p><input type="text" name="userID" value="" placeholder="Username or Email"></p>
+        <p><input type="text" name="userID" value="" placeholder="UserID"></p>
         <p><input type="password" name="password" value="" placeholder="Password"></p>
         
         <p class="submit"><input type="submit" name="login" value="Login"></p>
