@@ -16,12 +16,12 @@
         return false;
       }
     }
+    function 
   </script>
 </head>
 <body>
 
 <?php 
-
     $servername = "localhost";
     $username = "root";
     $password = "comodo365";
@@ -39,25 +39,39 @@ if(isset($_POST['login'])){
   $usr = mysqli_real_escape_string($conn, htmlentities($_POST['userID']));
   $psw = $_POST['password'];  
     
-  echo $usr;
-  echo $psw;
   $q = "SELECT * FROM person WHERE userID='$usr' AND password='$psw'";
-  
+  $department = "SELECT deptName FROM person WHERE userID = '$usr'";
   //step3: run the query and store result
   $res = mysqli_query($conn, $q);
+  $departmentRes = mysqli_query($conn, $department);
+  $DeptRow = mysqli_fetch_assoc($departmentRes);
+  $userDept =  $DeptRow['deptName'];
 
   //make sure we have a positive result
-  if(mysqli_num_rows($res) == 1){
+  if(mysqli_num_rows($res) == 1)
+  {
     #########  LOGGING IN  ##########
     //starting a session  
+    if($userDept != NULL)
+    {
+        session_start();
+        $_SESSION["userDept"] = $userDept;
+        $_SESSION["userID"] = $usr;
+        header('location:company.php');
+    }
+    else
+    {
         session_start();
         $_SESSION["userID"] = $usr;
-        //creating a log SESSION VARIABLE that will persist through pages   
-
-    header('location:company.php');
-  } else {
-                //create an error message   
+        header('location:company.php');
+    }
+    
+  } 
+  else 
+  {
+    //create an error message   
     $error = 'Wrong details. Please try again'; 
+    echo $error;
   }
 }
 ?> 
@@ -74,7 +88,7 @@ if(isset($_POST['login'])){
     </div>
 
     <div class="login-help">
-      <p>Forgot your password? <a href="index.html">Click here to reset it</a>.</p>
+
       <p class="submit"><input type="button" name="announcements" value="Announcements" onClick="window.location = 'general_announcement.php';"></p>
       <p class="submit"><input type="button" name="companyList" value="Company List" onClick="window.location = 'company.php';"></p>
     </div>
