@@ -143,7 +143,12 @@
 				if (!$conn) {
 				    die("Connection failed: " . mysqli_connect_error());
 				}
-				
+
+				$isWon = "SELECT appID FROM appFeedbackAnnouncement WHERE studentID = '$userID'";
+				$wonResult = mysqli_query($conn, $isWon);
+				$wonRow = mysqli_fetch_assoc($wonResult);
+				$wonID = $wonRow['appID'];
+				echo "WONID ".$wonID;
 				$sql = "SELECT quotaApply.appID, name, city, quotaDeadline, internshipDuration, qcount, quotaAmount, quota.status 
 						FROM (SELECT quotaID as quotaID, count(*) as qcount FROM quotaApply GROUP BY quotaID) as allAplications, quotaApply, quota, company 
 						WHERE allAplications.quotaID = quota.quotaID AND company.compID = quota.compID AND studentID = '$userID'
@@ -167,9 +172,22 @@
 				    echo "<table class=\"company_table\">"; 
 				    echo "<tr> <th>Company Name</th> <th>City</th> <th>Quota Deadline</th> <th>Training Period</th> <th>Total Applications</th> <th>Quota Amount</th> <th>Status</th> <th>Actions</th></tr>";
 				    while($row = mysqli_fetch_assoc($result)) {
-						echo "<tr><td>" . $row['name'] . "</td><td>" . $row['city'] . "</td><td>" . $row['quotaDeadline'] . "</td><td>"
-						. $row['internshipDuration'] . "</td><td>" . $row['qcount'] . "</td><td>" . $row['quotaAmount'] . "</td><td>" . $row['status'] . 
-						"</td><td>" ."<a href=quota_cancel.php?appID=". $row["appID"] . ">Cancel Application</a>"."</td></tr>";
+				    	if(mysqli_num_rows($wonResult) > 0){
+				    		if($wonID == $row['appID']){
+				    			echo "<tr><td>" . $row['name'] . "</td><td>" . $row['city'] . "</td><td>" . $row['quotaDeadline'] . "</td><td>"
+									. $row['internshipDuration'] . "</td><td>" . $row['qcount'] . "</td><td>" . $row['quotaAmount'] . "</td><td>" . $row['status'] . 
+									"</td><td>" ."<a href=quota_respond.php?res=1&appID=". $row["appID"] . ">Yes</a>"."<a href=quota_respond.php?res=0&appID=". $row["appID"] . ">No</a>"."</td></tr>";
+				    		}else{
+				    			echo "<tr><td>" . $row['name'] . "</td><td>" . $row['city'] . "</td><td>" . $row['quotaDeadline'] . "</td><td>"
+								. $row['internshipDuration'] . "</td><td>" . $row['qcount'] . "</td><td>" . $row['quotaAmount'] . "</td><td>" . $row['status'] . 
+								"</td><td>" ."<a href=quota_cancel.php?appID=". $row["appID"] . ">Cancel Application</a>"."</td></tr>";
+				    		}
+				    	}else{
+				    		echo "<tr><td>" . $row['name'] . "</td><td>" . $row['city'] . "</td><td>" . $row['quotaDeadline'] . "</td><td>"
+								. $row['internshipDuration'] . "</td><td>" . $row['qcount'] . "</td><td>" . $row['quotaAmount'] . "</td><td>" . $row['status'] . 
+								"</td><td>" ."<a href=quota_cancel.php?appID=". $row["appID"] . ">Cancel Application</a>"."</td></tr>";
+				    	}
+						
 				}
 				
 					echo "</table>"; 
