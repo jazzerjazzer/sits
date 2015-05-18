@@ -143,35 +143,34 @@
 				if (!$conn) {
 				    die("Connection failed: " . mysqli_connect_error());
 				}
-
-				if(isset($_POST['filter'])){
-					$city=$_POST['city'];
-					$unapproved = $_POST['show_only_unapproved'];
-				}elseif(isset($_POST['search'])){
-					$searchKey =$_POST['company_name'];
+				$show_all_applications = "";
+				if(isset($_POST['show_apps'])){
+					$show_all_applications = $_POST['show_all'];
 				}
-
-				$result_add_comp = $_GET['result'];
-				if($result_add_comp == 5){
-					echo "Company added succesfully. Waiting for advisor approval. <br>";
-				}
+			
 				$sql="SELECT DISTINCT city FROM company order by city"; 
 				$result = mysqli_query($conn, $sql);
 				echo "<div class=\"menu_table_container\">";
 				echo "<div class=\"menu_container\">";
-				echo "<form method=\"post\" action=\"advisor_approve.php\">";
+				echo "<form method=\"post\" action=\"secretary_see_applications.php\">";
 								
 				echo "<div class=\"menu_comp\">";
-				echo "<input type=\"checkbox\" name=\"show_only_unapproved\" value=\"unapproved\"> Show Only Unapproved Companies<br>";
+				echo "<input type=\"checkbox\" name=\"show_all\" value=\"show_all\"> Show All Applications<br>";
 				echo "</div>";
 				
 				echo "<div class=\"menu_comp\">";
-				echo "<button type=\"submit\" name=\"filter\">Filter</button>";
+				echo "<button type=\"submit\" name=\"show_apps\">Filter</button>";
 				echo "</div>";
 				echo "</div>";
 
 				$directApplyQuery = "SELECT pName, surname, studentID, company.compID, application.appID, company.name, approval FROM company, person, directApply, application WHERE application.approval = \"not approved\" AND application.appID = directApply.appID AND person.userID = directApply.studentID AND directApply.compID = company.compID";
-				$quotaApplyQuery = "SELECT quotaID, pName, surname, studentID, company.compID, application.appID, company.name, drawResult FROM company, person, quotaApply, application WHERE quotaApply.drawResult = 1 AND application.approval = \"not approved\" AND application.appID = quotaApply.appID AND person.userID = quotaApply.studentID AND quotaApply.compID = company.compID";
+				
+				if(strcmp($show_all_applications, "show_all") == 0){
+					$quotaApplyQuery = "SELECT quotaID, pName, surname, studentID, company.compID, application.appID, company.name, drawResult FROM company, person, quotaApply, application WHERE application.approval = \"not approved\" AND application.appID = quotaApply.appID AND person.userID = quotaApply.studentID AND quotaApply.compID = company.compID";
+				}else{
+					$quotaApplyQuery = "SELECT quotaID, pName, surname, studentID, company.compID, application.appID, company.name, drawResult FROM company, person, quotaApply, application WHERE quotaApply.drawResult = 1 AND application.approval = \"not approved\" AND application.appID = quotaApply.appID AND person.userID = quotaApply.studentID AND quotaApply.compID = company.compID";
+				}
+				
 
 				$directApplyResult = mysqli_query($conn, $directApplyQuery);
 				$quotaApplyResult = mysqli_query($conn, $quotaApplyQuery);
@@ -188,7 +187,12 @@
 				if (mysqli_num_rows($quotaApplyResult) > 0) {
 				    
 				    while($row = mysqli_fetch_assoc($quotaApplyResult)) {
-			    		echo "<tr><td>" . $row['appID'] . "</td><td>" . $row['pName'] . "</td><td>" . $row['surname'] . "</td><td>". $row['studentID'] . "</td><td>" . $row['compID'] . "</td><td>" . $row['name'] ."</td><td>" . "<a href=secretary_approve_util.php?appID=". $row['appID'] . ">Approve</a>"."</td></tr>";
+				    	if($row['drawResult'] == 1){
+				    		echo "<tr><td>" . $row['appID'] . "</td><td>" . $row['pName'] . "</td><td>" . $row['surname'] . "</td><td>". $row['studentID'] . "</td><td>" . $row['compID'] . "</td><td>" . $row['name'] ."</td><td>" . "<a href=secretary_approve_util.php?appID=". $row['appID'] . ">Approve</a>"."</td></tr>";
+				    	}else{
+				    		echo "<tr><td>" . $row['appID'] . "</td><td>" . $row['pName'] . "</td><td>" . $row['surname'] . "</td><td>". $row['studentID'] . "</td><td>" . $row['compID'] . "</td><td>" . $row['name'] ."</td><td>" . "N/A"."</td></tr>";
+				    	}
+			    		
 				    }
 				}
 				echo "</table>";
