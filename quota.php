@@ -90,7 +90,25 @@
 	body{
 		background-color:#00A4CE; 
 	}
+	.menu_table_container {
+		width:100%;
+	}
 
+	.menu_container {
+		text-align: center;
+		width:70%;
+	}
+	.table_container{
+		width:99%;
+	}
+	.menu_comp {
+		padding-left: 20px;
+		display: inline-block;
+		float:left;
+	}
+	.company_input{
+		width:200px;
+	}
 	#user_info{
 		border: 5px solid #520052;
 		color:white;
@@ -186,11 +204,19 @@
 					
 					if(strcmp($city, "") !== 0){
 						if(strcmp($city, "All Companies") !== 0){
-							$sql = "SELECT DISTINCT quotaApply.appID, quota.quotaID, company.compID,name, city, quotaDeadline, internshipStartDate, internshipEndDate, qcount, quotaAmount, quota.status, availableYears 
+							$sql2 = "SELECT c.name, c.city, q.quotaID, q.compID, q.internshipStartDate, q.internshipEndDate, q.availableYears, q.status, q.quotaAmount, q.quotaDeadline
+									FROM quota as q, company as c
+									WHERE q.quotaID NOT IN(SELECT aa.quotaID
+															FROM (SELECT quotaID as quotaID, count(*) as qcount
+												  				  FROM quotaApply 
+												 				  GROUP BY quotaID) as aa) AND q.compID = c.compID AND city = '$city'"; 
+
+							$sql = "SELECT quota.quotaID, company.compID,name, city, quotaDeadline, internshipStartDate, internshipEndDate, qcount, quotaAmount, quota.status, availableYears  
 									FROM (SELECT quotaID as quotaID, count(*) as qcount
-										  FROM quotaApply 
-										  GROUP BY quotaID) as allAplications, quotaApply, quota, opens, company 
-									WHERE allAplications.quotaID = quota.quotaID = opens.quotaID  AND company.compID = quota.compID = opens.compID AND company.city='$city'";
+			  								FROM quotaApply 
+			  								GROUP BY quotaID) as allAplications, quota,company, opens
+									WHERE allAplications.quotaID = quota.quotaID = opens.quotaID
+										AND company.compID = quota.compID = opens.compID AND city = '$city'";
 						}
 					}
 					$result = mysqli_query($conn, $sql);

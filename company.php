@@ -130,7 +130,7 @@
 		<div id="companies"> 
 			<?php
 				@session_start();
-				$usr = $_SESSION["user_name"];
+				$usr = $_SESSION["userID"];
 
 				$servername = "localhost";
 				$username = "root";
@@ -146,6 +146,12 @@
 
 				if(isset($_POST['filter'])){
 					$city=$_POST['city'];
+				}elseif(isset($_POST['search'])){
+					$searchKey =$_POST['company_name'];
+				}
+				$result_add_comp = $_GET['result'];
+				if($result_add_comp == 5){
+					echo "Company added succesfully. Waiting for advisor approval. <br>";
 				}
 				$sql="SELECT DISTINCT city FROM company order by city"; 
 				$result = mysqli_query($conn, $sql);
@@ -185,6 +191,13 @@
 				}else if(is_null($city)){
 					$sql = "SELECT compID, name, city, studentRating, evaluatorRating, applicableDepts, sector FROM company NATURAL JOIN registeredCompany";
 				}
+
+				if(strcmp($searchKey, "") !== 0){
+					$sql = "SELECT compID, name, city, studentRating, evaluatorRating, applicableDepts, sector 
+							FROM company NATURAL JOIN registeredCompany 
+							WHERE name LIKE '%$searchKey%'";
+				}
+
 				$result = mysqli_query($conn, $sql);
 				echo "<div class=\"table_container\">";
 				if (mysqli_num_rows($result) > 0) {
@@ -196,7 +209,7 @@
 						. $row['studentRating'] . "</td><td>" . $row['evaluatorRating'] . "</td><td>" . $row['applicableDepts'] . "</td><td>" . $row['sector'] . 
 						"</td><td>" ."<a href=direct_apply.php?compID=". $row["compID"] . "&userID=".$_SESSION["userID"]. ">Direct Apply</a>"."</td></tr>";
 				    }
-				echo "</table>"; // start a table tag in the HTML
+				echo "</table>";
 				} else {
 				    echo "0 results";
 				}
@@ -204,8 +217,8 @@
 				echo "</div>";
 				mysqli_close($conn);
 				
-				?>  
-				</form>
+			?>  
+			</form>
 		</div>
 
 		<div id="nav">
@@ -213,6 +226,7 @@
 				<?php
 					@session_start();
 					$usr = $_SESSION["userID"];
+
 					echo "<p>$usr</p>";
 					echo "<p>CS</p>";
 				?>

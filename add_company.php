@@ -208,7 +208,7 @@
 								$sql = "INSERT INTO company VALUES (DEFAULT, '$name', '$password', '$address', '$telephone', NULL, \"not approved\", NULL, NULL,
 								 '$city', '$country', NULL, NULL, '$sector')";
 								$result = mysqli_query($conn, $sql);
-								echo $result;
+								header('location:company.php?result=5');
 							}
 						?>			            
 						<label for="address">Address:</label>
