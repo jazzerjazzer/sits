@@ -168,7 +168,7 @@
 				    while($row = mysqli_fetch_assoc($result)) {
 						echo "<tr><td>" . $row['name'] . "</td><td>" . $row['city'] . "</td><td>" . $row['quotaDeadline'] . "</td><td>"
 						. $row['internshipDuration'] . "</td><td>" . $row['qcount'] . "</td><td>" . $row['quotaAmount'] . "</td><td>" . $row['status'] . 
-						"</td><td>" ."<a href=quota_apply_cancel.php?appID=". $row["appID"] . ">Cancel Application</a>"."</td></tr>";
+						"</td><td>" ."<a href=quota_cancel.php?appID=". $row["appID"] . ">Cancel Application</a>"."</td></tr>";
 				}
 				
 					echo "</table>"; 

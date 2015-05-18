@@ -109,7 +109,7 @@
 			<div id="right_content_area"> 
 				<?php
 					@session_start();
-					$usr = $_SESSION["user_name"];
+					$userID = $_SESSION["userID"];
 
 					$servername = "localhost";
 					$username = "root";
@@ -134,8 +134,13 @@
 					if(isset($_POST['filter'])){
 						$city=$_POST['city'];
 					}
+
 					$sql="SELECT DISTINCT city FROM company order by city"; 
 					$result = mysqli_query($conn, $sql);
+					
+					$appliedQuotas ="SELECT quotaID FROM quotaApply WHERE studentID = '$userID'"; 
+					$appliedQuotaResult =mysqli_query($conn, $appliedQuotas);
+					
 					echo "<div class=\"menu_table_container\">";
 					echo "<div class=\"menu_container\">";
 					echo "<form method=\"post\" action=\"quota.php\">";
@@ -171,13 +176,13 @@
 							FROM (SELECT quotaID as quotaID, count(*) as qcount
 	  								FROM quotaApply 
 	  								GROUP BY quotaID) as allAplications, quota,company, opens
-							WHERE allAplications.quotaID = quota.quotaID = opens.quotaID 
+							WHERE allAplications.quotaID = quota.quotaID = opens.quotaID
 								AND company.compID = quota.compID = opens.compID";
 							
 					
 					if(strcmp($city, "") !== 0){
 						if(strcmp($city, "All Companies") !== 0){
-							$sql = "SELECT quota.quotaID, company.compID,name, city, quotaDeadline, internshipStartDate, internshipEndDate, qcount, quotaAmount, quota.status, availableYears 
+							$sql = "SELECT DISTINCT quotaApply.appID, quota.quotaID, company.compID,name, city, quotaDeadline, internshipStartDate, internshipEndDate, qcount, quotaAmount, quota.status, availableYears 
 									FROM (SELECT quotaID as quotaID, count(*) as qcount
 										  FROM quotaApply 
 										  GROUP BY quotaID) as allAplications, quotaApply, quota, opens, company 
@@ -189,24 +194,38 @@
 
 					echo "<div class=\"table_container\">";
 					echo "<table class=\"company_table\">"; 
-					echo "<tr> <th>Name</th> <th>City</th> <th>Quota Deadline</th> <th>Start Date</th> <th>End Date</th> <th>Total Applications</th> <th>Quota Amount</th> <th>Status</th> <th>Available Years</th><th>Actions</th></tr>";
-
+					echo "<tr> <th>ID </th> <th>Name</th> <th>City</th> <th>Quota Deadline</th> <th>Start Date</th> <th>End Date</th> <th>Total Applications</th> <th>Quota Amount</th> <th>Status</th> <th>Available Years</th><th>Actions</th></tr>";
+					$flag = 0;
 					if (mysqli_num_rows($result) > 0) {
 
 					    while($row = mysqli_fetch_assoc($result)) {
-					    	
-								echo "<tr><td>" . $row['name'] . "</td><td>" . $row['city'] . "</td><td>" . $row['quotaDeadline'] . "</td><td>"
+					    	while($row3 = mysqli_fetch_assoc($appliedQuotaResult)){
+					    		if($row['quotaID'] == $row3['quotaID']){
+					    			$flag = 1;
+					    			break; 
+					    		}else{
+					    			$flag = 0;
+					    		}
+					    	}
+					    	if ($flag == 1){
+					    		echo "<tr><td>" . $row['quotaID'] . "</td><td>" . $row['name'] . "</td><td>" . $row['city'] . "</td><td>" . $row['quotaDeadline'] . "</td><td>"
 								. $row['internshipStartDate'] . "</td><td>" . $row['internshipEndDate'] . "</td><td>" . $row['qcount'] . "</td><td>" . $row['quotaAmount'] . "</td><td>" . $row['status'] . "</td><td>".  $row['availableYears'] . 
-									"</td><td>"."<a href=quota_apply.php?quotaID=". $row["quotaID"] . "&compID=". $row["compID"] . "&userID=".$_SESSION["userID"]. ">Apply</a>"."</td></tr>"; 
-					    }	
+									"</td><td>"."N/A"."</td></tr>"; 
+							}else{
+								echo "<tr><td>" . $row['quotaID'] . "</td><td>" . $row['name'] . "</td><td>" . $row['city'] . "</td><td>" . $row['quotaDeadline'] . "</td><td>"
+								. $row['internshipStartDate'] . "</td><td>" . $row['internshipEndDate'] . "</td><td>" . $row['qcount'] . "</td><td>" . $row['quotaAmount'] . "</td><td>" . $row['status'] . "</td><td>".  $row['availableYears'] . 
+									"</td><td>"."<a href=quota_apply.php?quotaID=". $row["quotaID"] . "&compID=". $row["compID"] . "&userID=".$userID. ">Apply</a>"."</td></tr>"; 
+							}
+							mysqli_data_seek($appliedQuotaResult, 1);
+					    }
 					}
 					if(mysqli_num_rows($result2) > 0){
 						
 						while($row = mysqli_fetch_assoc($result2)) {
 					    	
-							echo "<tr><td>" . $row['name'] . "</td><td>" . $row['city'] . "</td><td>" . $row['quotaDeadline'] . "</td><td>"
+							echo "<tr><td>" . $row['quotaID'] . "</td><td>" . $row['name'] . "</td><td>" . $row['city'] . "</td><td>" . $row['quotaDeadline'] . "</td><td>"
 							. $row['internshipStartDate'] . "</td><td>" . $row['internshipEndDate'] . "</td><td>" . "0" . "</td><td>" . $row['quotaAmount'] . "</td><td>" . $row['status'] . "</td><td>".  $row['availableYears'] . 
-							"</td><td>"."<a href=quota_apply.php?quotaID=". $row["quotaID"] . "&compID=". $row["compID"] . "&userID=".$_SESSION["userID"]. ">Apply</a>"."</td></tr>"; 
+							"</td><td>"."<a href=quota_apply.php?quotaID=". $row["quotaID"] . "&compID=". $row["compID"] . "&userID=".$userID. ">Apply</a>"."</td></tr>"; 
 					    }
 					}
 					echo "</table>"; 
