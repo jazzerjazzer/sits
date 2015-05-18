@@ -145,10 +145,9 @@
 				}
 				
 				$sql = "SELECT quotaApply.appID, name, city, quotaDeadline, internshipDuration, qcount, quotaAmount, quota.status 
-				FROM 
-					(SELECT quotaID as quotaID, count(*) as qcount FROM quotaApply GROUP BY quotaID) as allAplications, quotaApply, quota, company 
-					WHERE allAplications.quotaID = quota.quotaID AND company.compID = quota.compID = quotaApply.compID 
-						AND studentID = '$userID' AND quotaApply.quotaID = allAplications.quotaID";
+						FROM (SELECT quotaID as quotaID, count(*) as qcount FROM quotaApply GROUP BY quotaID) as allAplications, quotaApply, quota, company 
+						WHERE allAplications.quotaID = quota.quotaID AND company.compID = quota.compID AND studentID = '$userID'
+						AND quotaApply.quotaID = allAplications.quotaID AND quota.compID = quotaApply.compID;";
 				
 				$result_cancel_application = $_GET['result'];
 				if($result_cancel_application == 2){
