@@ -146,6 +146,17 @@
 				$show_all_applications = "";
 				if(isset($_POST['show_apps'])){
 					$show_all_applications = $_POST['show_all'];
+				}else if(isset($_POST['drop_losers'])){
+					$drop_losers = "SELECT appID FROM quotaApply WHERE drawResult = 0";
+					$drop_losers_result = mysqli_query($conn, $drop_losers);
+					if (mysqli_num_rows($drop_losers_result) > 0) {
+				    
+					    while($row = mysqli_fetch_assoc($drop_losers_result)) {
+					    	$delID = $row['appID'];
+					    	$deleteLosers = "DELETE FROM application WHERE appID = '$delID'";
+					    	mysqli_query($conn, $deleteLosers);
+					    }
+					}
 				}
 			
 				$sql="SELECT DISTINCT city FROM company order by city"; 
@@ -160,6 +171,9 @@
 				
 				echo "<div class=\"menu_comp\">";
 				echo "<button type=\"submit\" name=\"show_apps\">Filter</button>";
+				echo "</div>";
+				echo "<div class=\"menu_comp\">";
+				echo "<button type=\"submit\" name=\"drop_losers\">Drop Loser Apps</button>";
 				echo "</div>";
 				echo "</div>";
 
