@@ -161,6 +161,8 @@
 					echo "first apply success <br>";					
 				}
 				$result = mysqli_query($conn, $sql);
+				echo "<h2>Quota Applications </h2>";
+				echo "<hr>";
 				echo "<div class=\"table_container\">";
 				if (mysqli_num_rows($result) > 0) {
 				    echo "<table class=\"company_table\">"; 
@@ -174,7 +176,7 @@
 					echo "</table>"; 
 
 				} else {
-				    echo "0 results";
+				    echo "You have no quota applications.";
 				}
 				echo "<h2>Direct Applications </h2>";
 				echo "<hr>";
@@ -193,6 +195,8 @@
 					}									
 					echo "</table>"; 
 
+				}else{
+					echo "You have no direct applications.";
 				}
 
 				echo "</div>";

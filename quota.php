@@ -135,6 +135,10 @@
 						$city=$_POST['city'];
 					}
 
+					$directApplyAmount = "SELECT appID FROM directApply WHERE studentID = '$userID'";
+					$directApplyAmountResult = mysqli_query($conn, $directApplyAmount);
+					$directApplyRows = mysqli_num_rows($directApplyAmountResult);
+
 					$sql="SELECT DISTINCT city FROM company order by city"; 
 					$result = mysqli_query($conn, $sql);
 					
@@ -178,7 +182,7 @@
 	  								GROUP BY quotaID) as allAplications, quota,company, opens
 							WHERE allAplications.quotaID = quota.quotaID = opens.quotaID
 								AND company.compID = quota.compID = opens.compID";
-							
+					
 					
 					if(strcmp($city, "") !== 0){
 						if(strcmp($city, "All Companies") !== 0){
@@ -212,9 +216,16 @@
 								. $row['internshipStartDate'] . "</td><td>" . $row['internshipEndDate'] . "</td><td>" . $row['qcount'] . "</td><td>" . $row['quotaAmount'] . "</td><td>" . $row['status'] . "</td><td>".  $row['availableYears'] . 
 									"</td><td>"."N/A"."</td></tr>"; 
 							}else{
-								echo "<tr><td>" . $row['quotaID'] . "</td><td>" . $row['name'] . "</td><td>" . $row['city'] . "</td><td>" . $row['quotaDeadline'] . "</td><td>"
-								. $row['internshipStartDate'] . "</td><td>" . $row['internshipEndDate'] . "</td><td>" . $row['qcount'] . "</td><td>" . $row['quotaAmount'] . "</td><td>" . $row['status'] . "</td><td>".  $row['availableYears'] . 
-									"</td><td>"."<a href=quota_apply.php?quotaID=". $row["quotaID"] . "&compID=". $row["compID"] . "&userID=".$userID. ">Apply</a>"."</td></tr>"; 
+								if($directApplyRows > 0){
+									echo "<tr><td>" . $row['quotaID'] . "</td><td>" . $row['name'] . "</td><td>" . $row['city'] . "</td><td>" . $row['quotaDeadline'] . "</td><td>"
+									. $row['internshipStartDate'] . "</td><td>" . $row['internshipEndDate'] . "</td><td>" . $row['qcount'] . "</td><td>" . $row['quotaAmount'] . "</td><td>" . $row['status'] . "</td><td>".  $row['availableYears'] . 
+										"</td><td>"."<a href=quota_apply.php?quotaID=". $row["quotaID"] . "&compID=". $row["compID"] . "&userID=".$userID."&da=1". ">Apply</a>"."</td></tr>"; 
+								}else{
+									echo "<tr><td>" . $row['quotaID'] . "</td><td>" . $row['name'] . "</td><td>" . $row['city'] . "</td><td>" . $row['quotaDeadline'] . "</td><td>"
+									. $row['internshipStartDate'] . "</td><td>" . $row['internshipEndDate'] . "</td><td>" . $row['qcount'] . "</td><td>" . $row['quotaAmount'] . "</td><td>" . $row['status'] . "</td><td>".  $row['availableYears'] . 
+										"</td><td>"."<a href=quota_apply.php?quotaID=". $row["quotaID"] . "&compID=". $row["compID"] . "&userID=".$userID."&da=0". ">Apply</a>"."</td></tr>"; 
+								
+								}
 							}
 							mysqli_data_seek($appliedQuotaResult, 0);
 					    }
@@ -222,10 +233,16 @@
 					if(mysqli_num_rows($result2) > 0){
 						
 						while($row = mysqli_fetch_assoc($result2)) {
-					    	
-							echo "<tr><td>" . $row['quotaID'] . "</td><td>" . $row['name'] . "</td><td>" . $row['city'] . "</td><td>" . $row['quotaDeadline'] . "</td><td>"
-							. $row['internshipStartDate'] . "</td><td>" . $row['internshipEndDate'] . "</td><td>" . "0" . "</td><td>" . $row['quotaAmount'] . "</td><td>" . $row['status'] . "</td><td>".  $row['availableYears'] . 
-							"</td><td>"."<a href=quota_apply.php?quotaID=". $row["quotaID"] . "&compID=". $row["compID"] . "&userID=".$userID. ">Apply</a>"."</td></tr>"; 
+							if($directApplyRows > 0){
+								echo "<tr><td>" . $row['quotaID'] . "</td><td>" . $row['name'] . "</td><td>" . $row['city'] . "</td><td>" . $row['quotaDeadline'] . "</td><td>"
+								. $row['internshipStartDate'] . "</td><td>" . $row['internshipEndDate'] . "</td><td>" . "0" . "</td><td>" . $row['quotaAmount'] . "</td><td>" . $row['status'] . "</td><td>".  $row['availableYears'] . 
+								"</td><td>"."<a href=quota_apply.php?quotaID=". $row["quotaID"] . "&compID=". $row["compID"] . "&userID=".$userID."&da=1". ">Apply</a>"."</td></tr>"; 
+							}else{
+								echo "<tr><td>" . $row['quotaID'] . "</td><td>" . $row['name'] . "</td><td>" . $row['city'] . "</td><td>" . $row['quotaDeadline'] . "</td><td>"
+								. $row['internshipStartDate'] . "</td><td>" . $row['internshipEndDate'] . "</td><td>" . "0" . "</td><td>" . $row['quotaAmount'] . "</td><td>" . $row['status'] . "</td><td>".  $row['availableYears'] . 
+								"</td><td>"."<a href=quota_apply.php?quotaID=". $row["quotaID"] . "&compID=". $row["compID"] . "&userID=".$userID."&da=0". ">Apply</a>"."</td></tr>"; 
+
+							}
 					    }
 					}
 					echo "</table>"; 
