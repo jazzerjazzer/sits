@@ -89,6 +89,7 @@
     <div class="login-help">
 
       <p class="submit"><input type="button" name="announcements" value="Announcements" onClick="window.location = 'general_announcementl.php';"></p>
+      <br>
       <p class="submit"><input type="button" name="companyList" value="Company List" onClick="window.location = 'companyl.php';"></p>
     </div>
   </section>
