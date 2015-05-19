@@ -34,46 +34,48 @@
         die("Connection failed: " . mysqli_connect_error());
     }
 
-//check if the login form has been submitted
-if(isset($_POST['login'])){
-  $usr = mysqli_real_escape_string($conn, htmlentities($_POST['userID']));
-  $psw = $_POST['password'];  
-    
-  $q = "SELECT * FROM person WHERE userID='$usr' AND password='$psw'";
-  $department = "SELECT deptName FROM person WHERE userID = '$usr'";
-  //step3: run the query and store result
-  $res = mysqli_query($conn, $q);
-  $departmentRes = mysqli_query($conn, $department);
-  $DeptRow = mysqli_fetch_assoc($departmentRes);
-  $userDept =  $DeptRow['deptName'];
+  //check if the login form has been submitted
+  if(isset($_POST['login'])){
+    $usr = mysqli_real_escape_string($conn, htmlentities($_POST['userID']));
+    $psw = $_POST['password'];  
+      
+    $q = "SELECT * FROM person WHERE userID='$usr' AND password='$psw'";
+    $department = "SELECT deptName FROM person WHERE userID = '$usr'";
+    //step3: run the query and store result
+    $res = mysqli_query($conn, $q);
+    $resRow = mysqli_fetch_assoc($res);
+    $userType =  $resRow['userType'];
+    $departmentRes = mysqli_query($conn, $department);
+    $DeptRow = mysqli_fetch_assoc($departmentRes);
+    $userDept =  $DeptRow['deptName'];
 
-  //make sure we have a positive result
-  if(mysqli_num_rows($res) == 1)
-  {
-    #########  LOGGING IN  ##########
-    //starting a session  
-    if($userDept != NULL)
-    {
-        session_start();
-        $_SESSION["userDept"] = $userDept;
-        $_SESSION["userID"] = $usr;
-        header('location:company.php');
+    //make sure we have a positive result
+    if(mysqli_num_rows($res) == 1){
+      if($userDept != NULL){
+          session_start();
+          $_SESSION["userDept"] = $userDept;
+          $_SESSION["userID"] = $usr;
+          $_SESSION["userType"] = $userType;
+          if(strcmp($userType, "student") == 0){
+              header('location:company.php');
+          }elseif(strcmp($userType, "secretary") == 0){
+              header('location:companys.php');
+          }elseif(strcmp($userType, "advisor") == 0){
+              header('location:companya.php');
+          }if(strcmp($userType, "company") == 0){
+              header('location:companyc.php');
+          }
+      }else{
+          session_start();
+          $_SESSION["userID"] = $usr;
+          header('location:company.php');
+      }
+    } 
+    else {
+      $error = 'Wrong details. Please try again'; 
+      echo $error;
     }
-    else
-    {
-        session_start();
-        $_SESSION["userID"] = $usr;
-        header('location:company.php');
-    }
-    
-  } 
-  else 
-  {
-    //create an error message   
-    $error = 'Wrong details. Please try again'; 
-    echo $error;
   }
-}
 ?> 
 
   <section class="container">
