@@ -241,8 +241,8 @@
 				<?php
 					@session_start();
 					$usr = $_SESSION["userID"];
-
-					echo "<p>$usr</p>";
+					$name = $_SESSION["name"];
+					echo "<p>$name</p>";
 					echo "<p>CS</p>";
 				?>
 				<p>Logout</p>

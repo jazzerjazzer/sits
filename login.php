@@ -44,6 +44,8 @@
     $res = mysqli_query($conn, $q);
     $resRow = mysqli_fetch_assoc($res);
     $userType =  $resRow['userType'];
+    $name = $resRow['pName'];
+    $surname = $resRow['surname'];
     $departmentRes = mysqli_query($conn, $department);
     $DeptRow = mysqli_fetch_assoc($departmentRes);
     $userDept =  $DeptRow['deptName'];
@@ -54,7 +56,7 @@
           $_SESSION["userDept"] = $userDept;
           $_SESSION["userID"] = $usr;
           $_SESSION["userType"] = $userType;
-
+          $_SESSION["name"] = $name . " ". $surname;
           if(strcmp($userType, "student") == 0){
               header('location:company.php');
           }elseif(strcmp($userType, "secretary") == 0){

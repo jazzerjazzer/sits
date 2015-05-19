@@ -173,7 +173,7 @@
 			        <fieldset>
 			            <label for="company_name">Company Name:</label>
 						<?php
-							
+							@session_start();
 							$servername = "localhost";
 							$username = "root";
 							$password = "comodo365";
@@ -234,7 +234,6 @@
 								$announcementTitle = $_POST['announcement_title'];
 								$announcementMessage = $_POST['message_area'];
 								$companyName = $_POST['company_name'];
-
 								$addAnnQuery = "INSERT INTO announcement VALUES (DEFAULT, DEFAULT, \"general\")";
 								mysqli_query( $conn, $addAnnQuery );
 
@@ -251,8 +250,13 @@
 								$addQuotaQuery = "INSERT INTO quota VALUES (DEFAULT, '$lastID', '$compID', $duration, 
 									'$startDate', '$endDate', '$availableYear', \"waiting for first drawal\", 
 									'$quotaAmount', '$deadline')";
-								mysqli_query( $conn, $addQuotaQuery);
+								
+								mysqli_query($conn, $addQuotaQuery );
+								$lastQuotaID = mysqli_insert_id($conn);
 
+								$usrDept = $_SESSION["userDept"];
+								$addQuotaToOpensQuery = "INSERT INTO opens VALUES ('$lastQuotaID', '$compID', '$usrDept')";
+								mysqli_query($conn, $addQuotaToOpensQuery);
 							}
 						?>		
 					</fieldset>
@@ -268,8 +272,8 @@
 					@session_start();
 					$usr = $_SESSION["userID"];
 					$userDept = $_SESSION["userDept"];
-
-					echo "<p>$usr</p>";
+					$name = $_SESSION["name"];
+					echo "<p>$name</p>";
 					echo "<p>$userDept</p>";
 				?>
 				<p><a href='logout.php'>Logout</a></p>

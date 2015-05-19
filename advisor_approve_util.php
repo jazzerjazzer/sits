@@ -16,11 +16,12 @@
 	$userID = $_GET['userID'];
 
 	$sql = "UPDATE company SET status = \"approved\" WHERE compID = '$compID'";
+	$insertToSelfFound = "INSERT INTO selfFoundCompany VALUES ('$compID', '$userID')";
 	if ($conn->query($sql) == TRUE) {
-		if ($conn->query($sql) == TRUE) {
+		if($conn->query($insertToSelfFound) == TRUE){
 			header('location:advisor_approve.php?result=2');
-		}else{
-			header('location:advisor_approve.php?result=1');
 		}
+	}else{
+		header('location:advisor_approve.php?result=1');
 	}
 ?>

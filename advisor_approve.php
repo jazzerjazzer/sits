@@ -239,8 +239,8 @@
 					@session_start();
 					$usr = $_SESSION["userID"];
 					$userDept = $_SESSION["userDept"];
-
-					echo "<p>$usr</p>";
+					$name = $_SESSION["name"];
+					echo "<p>$name</p>";
 					echo "<p>$userDept</p>";
 				?>
 				<p><a href='logout.php'>Logout</a></p>

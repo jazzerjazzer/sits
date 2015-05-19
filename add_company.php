@@ -5,7 +5,20 @@
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+	<script language="javascript">
 
+		function validateForm(){
+		  var a=document.forms["comp_form"]["company_name"].value;
+		  var b=document.forms["comp_form"]["address"].value;
+		  var c=document.forms["comp_form"]["telephone"].value;
+		  var d=document.forms["comp_form"]["sector"].value;
+
+		  if (a==null || a=="",b==null || b=="",c==null || c=="",d==null || d==""){
+		    alert("Please Fill All Fields!");
+		    return false;
+		  }
+		}
+	</script>
 	<style style="text/css">
 	
 
@@ -141,7 +154,7 @@
 	<div id="container">
 		<div id="right_content_area"> 
 			<div class="company_details">
-				<form action="" method="post" name="comp_form" class="comp_form">
+				<form action="" method="post" name="comp_form" class="comp_form" onsubmit="return validateForm()">
 				<h2>Company Details</h2>
 				<button type="submit" name="add" action="#">Add</button>
 				<hr>
@@ -228,8 +241,8 @@
 					@session_start();
 					$usr = $_SESSION["userID"];
 					$userDept = $_SESSION["userDept"];
-
-					echo "<p>$usr</p>";
+					$name = $_SESSION["name"];
+					echo "<p>$name</p>";
 					echo "<p>$userDept</p>";
 				?>
 				<p><a href='logout.php'>Logout</a></p>
