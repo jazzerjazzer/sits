@@ -179,6 +179,7 @@
 					echo "<div class=\"menu_comp\">";
 					echo "<button type=\"submit\" name=\"filter\">Filter</button>";				
 					echo "</div>";
+					
 					echo "</div>";
 
 					$sql2 = "SELECT c.name, c.city, q.quotaID, q.compID, q.internshipStartDate, q.internshipEndDate, q.availableYears, q.status, q.quotaAmount, q.quotaDeadline
@@ -218,7 +219,7 @@
 
 					echo "<div class=\"table_container\">";
 					echo "<table class=\"company_table\">"; 
-					echo "<tr> <th>ID </th> <th>Name</th> <th>City</th> <th>Quota Deadline</th> <th>Start Date</th> <th>End Date</th> <th>Total Applications</th> <th>Quota Amount</th> <th>Status</th> <th>Available Years</th><th>Actions</th></tr>";
+					echo "<tr> <th>ID </th> <th>Name</th> <th>City</th> <th>Quota Deadline</th> <th>Start Date</th> <th>End Date</th> <th>Total Applications</th> <th>Quota Amount</th> <th>Status</th> <th>Available Years</th></tr>";
 					$flag = 0;
 					if (mysqli_num_rows($result) > 0) {
 
@@ -234,7 +235,7 @@
 					    	if ($flag == 1){
 					    		echo "<tr><td>" . $row['quotaID'] . "</td><td>" . $row['name'] . "</td><td>" . $row['city'] . "</td><td>" . $row['quotaDeadline'] . "</td><td>"
 								. $row['internshipStartDate'] . "</td><td>" . $row['internshipEndDate'] . "</td><td>" . $row['qcount'] . "</td><td>" . $row['quotaAmount'] . "</td><td>" . $row['status'] . "</td><td>".  $row['availableYears'] . 
-									"</td><td>"."N/A"."</td></tr>"; 
+									"</td></tr>"; 
 							}else{
 								if($directApplyRows > 0){
 									if(strcmp($row['status'], "waiting for student approval") == 0){
@@ -244,17 +245,17 @@
 									}else{
 										echo "<tr><td>" . $row['quotaID'] . "</td><td>" . $row['name'] . "</td><td>" . $row['city'] . "</td><td>" . $row['quotaDeadline'] . "</td><td>"
 										. $row['internshipStartDate'] . "</td><td>" . $row['internshipEndDate'] . "</td><td>" . $row['qcount'] . "</td><td>" . $row['quotaAmount'] . "</td><td>" . $row['status'] . "</td><td>".  $row['availableYears'] . 
-											"</td><td>"."<a href=quota_apply.php?quotaID=". $row["quotaID"] . "&compID=". $row["compID"] . "&userID=".$userID."&da=1". ">Apply</a>"."</td></tr>"; 
+											"</td></tr>"; 
 									}
 								}else{
 									if(strcmp($row['status'], "waiting for student approval") == 0){
 										echo "<tr><td>" . $row['quotaID'] . "</td><td>" . $row['name'] . "</td><td>" . $row['city'] . "</td><td>" . $row['quotaDeadline'] . "</td><td>"
 										. $row['internshipStartDate'] . "</td><td>" . $row['internshipEndDate'] . "</td><td>" . $row['qcount'] . "</td><td>" . $row['quotaAmount'] . "</td><td>" . $row['status'] . "</td><td>".  $row['availableYears'] . 
-											"</td><td>"."N/A"."</td></tr>"; 
+											"</td></tr>"; 
 									}else{
 										echo "<tr><td>" . $row['quotaID'] . "</td><td>" . $row['name'] . "</td><td>" . $row['city'] . "</td><td>" . $row['quotaDeadline'] . "</td><td>"
 										. $row['internshipStartDate'] . "</td><td>" . $row['internshipEndDate'] . "</td><td>" . $row['qcount'] . "</td><td>" . $row['quotaAmount'] . "</td><td>" . $row['status'] . "</td><td>".  $row['availableYears'] . 
-											"</td><td>"."<a href=quota_apply.php?quotaID=". $row["quotaID"] . "&compID=". $row["compID"] . "&userID=".$userID."&da=0". ">Apply</a>"."</td></tr>"; 
+											"</td></tr>"; 
 									}
 								}
 							}
@@ -268,22 +269,22 @@
 								if(strcmp($row['status'], "waiting for student approval") == 0){
 									echo "<tr><td>" . $row['quotaID'] . "</td><td>" . $row['name'] . "</td><td>" . $row['city'] . "</td><td>" . $row['quotaDeadline'] . "</td><td>"
 										. $row['internshipStartDate'] . "</td><td>" . $row['internshipEndDate'] . "</td><td>" . "0" . "</td><td>" . $row['quotaAmount'] . "</td><td>" . $row['status'] . "</td><td>".  $row['availableYears'] . 
-										"</td><td>"."N/A"."</td></tr>"; 
+										"</td></tr>"; 
 								}else{
 									echo "<tr><td>" . $row['quotaID'] . "</td><td>" . $row['name'] . "</td><td>" . $row['city'] . "</td><td>" . $row['quotaDeadline'] . "</td><td>"
 										. $row['internshipStartDate'] . "</td><td>" . $row['internshipEndDate'] . "</td><td>" . "0" . "</td><td>" . $row['quotaAmount'] . "</td><td>" . $row['status'] . "</td><td>".  $row['availableYears'] . 
-										"</td><td>"."<a href=quota_apply.php?quotaID=". $row["quotaID"] . "&compID=". $row["compID"] . "&userID=".$userID."&da=1". ">Apply</a>"."</td></tr>"; 
+										"</td></tr>"; 
 								}
 								
 							}else{
 								if(strcmp($row['status'], "waiting for student approval") == 0){
 									echo "<tr><td>" . $row['quotaID'] . "</td><td>" . $row['name'] . "</td><td>" . $row['city'] . "</td><td>" . $row['quotaDeadline'] . "</td><td>"
 										. $row['internshipStartDate'] . "</td><td>" . $row['internshipEndDate'] . "</td><td>" . "0" . "</td><td>" . $row['quotaAmount'] . "</td><td>" . $row['status'] . "</td><td>".  $row['availableYears'] . 
-										"</td><td>"."N/A"."</td></tr>"; 
+										"</td></tr>"; 
 								}else{
 									echo "<tr><td>" . $row['quotaID'] . "</td><td>" . $row['name'] . "</td><td>" . $row['city'] . "</td><td>" . $row['quotaDeadline'] . "</td><td>"
 										. $row['internshipStartDate'] . "</td><td>" . $row['internshipEndDate'] . "</td><td>" . "0" . "</td><td>" . $row['quotaAmount'] . "</td><td>" . $row['status'] . "</td><td>".  $row['availableYears'] . 
-										"</td><td>"."<a href=quota_apply.php?quotaID=". $row["quotaID"] . "&compID=". $row["compID"] . "&userID=".$userID."&da=0". ">Apply</a>"."</td></tr>"; 
+										"</td></tr>"; 
 								}
 							}
 					    }
@@ -311,10 +312,10 @@
 
 				<div id="menu_buttons">
 					<ul>
-						<li><a href="applications.php" class="button-2">My Applications</a></li>
-						<li><a href="quota.php" class="button-2">Quotas</a></li>
-						<li><a href="company.php" class="button-2">Companies</a></li>
-						<li><a href="general_announcement.php" class="button-2">Anouncements</a></li>
+						<li><a href="secretary_see_applications.php" class="button-2">Applications</a></li>
+						<li><a href="quotas.php" class="button-2">Quotas</a></li>
+						<li><a href="companys.php" class="button-2">Companies</a></li>
+						<li><a href="general_announcements.php" class="button-2">Anouncements</a></li>
 					</ul>
 				</div>
 			</div>
