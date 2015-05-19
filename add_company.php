@@ -165,6 +165,8 @@
 			            <input name="company_name" />
 			            <label for="country">Country:</label>
 						<?php
+							@session_start();
+							$userDept = $_SESSION["userDept"];
 							
 							function generateRandomString($length = 8) {
 							    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -219,7 +221,8 @@
 								$telephone = $_POST['telephone'];
 								$sector = $_POST['sector'];
 								$password = generateRandomString(8);
-								$sql = "INSERT INTO company VALUES (DEFAULT, '$name', '$password', '$address', '$telephone', NULL, \"not approved\", NULL, NULL,
+
+								$sql = "INSERT INTO company VALUES (DEFAULT, '$name', '$password', '$address', '$telephone', '$userDept', \"not approved\", NULL, NULL,
 								 '$city', '$country', NULL, NULL, '$sector')";
 								$result = mysqli_query($conn, $sql);
 								$contFlag = 1;

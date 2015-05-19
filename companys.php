@@ -148,6 +148,8 @@
 					$city=$_POST['city'];
 				}elseif(isset($_POST['search'])){
 					$searchKey =$_POST['company_name'];
+				}elseif(isset($_POST['see_report'])){
+					header('location:see_report.php');
 				}
 
 				$sql="SELECT DISTINCT city FROM company order by city"; 
@@ -174,6 +176,9 @@
 				echo "</div>";
 				echo "<div class=\"menu_comp\">";
 				echo "<button type=\"submit\" name=\"search\">Search</button>";
+				echo "</div>";
+				echo "<div class=\"menu_comp\">";
+				echo "<button type=\"submit\" name=\"see_report\">See Report</button>";
 				echo "</div>";
 				echo "</div>";
 				
