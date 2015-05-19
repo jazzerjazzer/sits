@@ -8,15 +8,14 @@
   <script language="javascript">
 
     function validateForm(){
-      var a=document.forms["Form"]["login"].value;
+      var a=document.forms["Form"]["userID"].value;
       var b=document.forms["Form"]["password"].value;
       
       if (a==null || a=="",b==null || b==""){
-        alert("Please Fill All Required Field");
+        alert("Please Fill All Fields!");
         return false;
       }
     }
-    function 
   </script>
 </head>
 <body>
@@ -48,28 +47,24 @@
     $departmentRes = mysqli_query($conn, $department);
     $DeptRow = mysqli_fetch_assoc($departmentRes);
     $userDept =  $DeptRow['deptName'];
-
+    echo $userType;
     //make sure we have a positive result
     if(mysqli_num_rows($res) == 1){
-      if($userDept != NULL){
           session_start();
           $_SESSION["userDept"] = $userDept;
           $_SESSION["userID"] = $usr;
           $_SESSION["userType"] = $userType;
+
           if(strcmp($userType, "student") == 0){
               header('location:company.php');
           }elseif(strcmp($userType, "secretary") == 0){
               header('location:companys.php');
           }elseif(strcmp($userType, "advisor") == 0){
-              header('location:companya.php');
+              header('location:advisor_approve.php');
           }if(strcmp($userType, "company") == 0){
+              $userDept = NULL;
               header('location:companyc.php');
           }
-      }else{
-          session_start();
-          $_SESSION["userID"] = $usr;
-          header('location:company.php');
-      }
     } 
     else {
       $error = 'Wrong details. Please try again'; 
@@ -91,8 +86,8 @@
 
     <div class="login-help">
 
-      <p class="submit"><input type="button" name="announcements" value="Announcements" onClick="window.location = 'general_announcement.php';"></p>
-      <p class="submit"><input type="button" name="companyList" value="Company List" onClick="window.location = 'company.php';"></p>
+      <p class="submit"><input type="button" name="announcements" value="Announcements" onClick="window.location = 'general_announcementl.php';"></p>
+      <p class="submit"><input type="button" name="companyList" value="Company List" onClick="window.location = 'companyl.php';"></p>
     </div>
   </section>
 </body>

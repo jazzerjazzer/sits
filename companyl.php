@@ -129,9 +129,7 @@
 	<div id="container">
 		<div id="companies"> 
 			<?php
-				@session_start();
-				$usr = $_SESSION["userID"];
-
+				
 				$servername = "localhost";
 				$username = "root";
 				$password = "comodo365";
@@ -146,7 +144,6 @@
 
 				if(isset($_POST['filter'])){
 					$city=$_POST['city'];
-					$unapproved = $_POST['show_only_unapproved'];
 				}elseif(isset($_POST['search'])){
 					$searchKey =$_POST['company_name'];
 				}
@@ -155,7 +152,7 @@
 				$result = mysqli_query($conn, $sql);
 				echo "<div class=\"menu_table_container\">";
 				echo "<div class=\"menu_container\">";
-				echo "<form method=\"post\" action=\"advisor_approve.php\">";
+				echo "<form method=\"post\" action=\"companyl.php\">";
 				echo "<div class=\"menu_comp\">";
 				echo "<select id=\"city\" name=\"city\" >"; 
  				echo "<option selected=\"selected\">All Companies</option>";
@@ -165,13 +162,9 @@
 				}
 				echo "</select>"; 
 				echo "</div>";
-				
+
 				echo "<div class=\"menu_comp\">";
-				echo "<input type=\"checkbox\" name=\"show_only_unapproved\" value=\"unapproved\"> Show Only Unapproved Companies<br>";
-				echo "</div>";
-				
-				echo "<div class=\"menu_comp\">";
-				echo "<button type=\"submit\" name=\"filter\">Filter</button>";
+				echo "<button type=\"submit\" name=\"filter\">Filter</button>";				
 				echo "</div>";
 				echo "<div class=\"menu_comp\">";
 				echo "<label for=\"company_input\">Company Name</label>";
@@ -180,28 +173,20 @@
 				echo "<div class=\"menu_comp\">";
 				echo "<button type=\"submit\" name=\"search\">Search</button>";
 				echo "</div>";
-
 				echo "</div>";
-
-				$sql = "SELECT compID, name, city, studentRating, evaluatorRating, applicableDepts, sector, status
-						FROM company";
-
+				
 				if(strcmp($city, "") !== 0){
-					if(strcmp($city, "All Companies") !== 0){
-						$sql =  $sql . " WHERE city='$city'";
-					}
-				}
-				if(strcmp($unapproved, "unapproved") == 0){
-					if (strpos($sql, 'WHERE') !== false){
-						$sql =  $sql . " AND status = \"not approved\"";
-					}else{
-						$sql =  $sql . " WHERE status = \"not approved\"";
-					}
+					if(strcmp($city, "All Companies") !== 0)
+						$sql = "SELECT compID, name, city, studentRating, evaluatorRating, applicableDepts, sector FROM company NATURAL JOIN registeredCompany WHERE city='$city'";
+					else
+						$sql = "SELECT compID, name, city, studentRating, evaluatorRating, applicableDepts, sector FROM company NATURAL JOIN registeredCompany";
+				}else if(is_null($city)){
+					$sql = "SELECT compID, name, city, studentRating, evaluatorRating, applicableDepts, sector FROM company NATURAL JOIN registeredCompany";
 				}
 
 				if(strcmp($searchKey, "") !== 0){
-					$sql = "SELECT compID, name, city, studentRating, evaluatorRating, applicableDepts, sector, status
-							FROM company 
+					$sql = "SELECT compID, name, city, studentRating, evaluatorRating, applicableDepts, sector 
+							FROM company NATURAL JOIN registeredCompany 
 							WHERE name LIKE '%$searchKey%'";
 				}
 
@@ -210,16 +195,11 @@
 				if (mysqli_num_rows($result) > 0) {
 				    // output data of each row
 				    echo "<table class=\"company_table\">"; // start a table tag in the HTML
-				    echo "<tr> <th>ID</th> <th>Name</th> <th>City</th> <th>Student Rating</th> <th>Evaluator Rating</th> <th>App Depts.</th> <th>Sector</th> <th>Actions</th></tr>";
+				    echo "<tr> <th>ID</th> <th>Name</th> <th>City</th> <th>Student Rating</th> <th>Evaluator Rating</th> <th>App Depts.</th> <th>Sector</th></tr>";
 				    while($row = mysqli_fetch_assoc($result)) {
-				    	if(strcmp($row['status'], "approved") == 0){
-				    		echo "<tr><td>" . $row['compID'] . "</td><td>" . $row['name'] . "</td><td>" . $row['city'] . "</td><td>"
-							. $row['studentRating'] . "</td><td>" . $row['evaluatorRating'] . "</td><td>" . $row['applicableDepts'] ."</td><td>" . $row['sector'] . "</td><td>" ."N/A"."</td></tr>";
-				    	}else{
-				    		echo "<tr><td>" . $row['compID'] . "</td><td>" . $row['name'] . "</td><td>" . $row['city'] . "</td><td>"
-							. $row['studentRating'] . "</td><td>" . $row['evaluatorRating'] . "</td><td>" . $row['applicableDepts'] . "</td><td>" . $row['sector'] . 
-							"</td><td>" ."<a href=advisor_approve_util.php?compID=". $row["compID"] . "&userID=".$_SESSION["userID"]. ">Approve</a>"."</td></tr>";
-				    	}
+						echo "<tr><td>" . $row['compID'] . "</td><td>" . $row['name'] . "</td><td>" . $row['city'] . "</td><td>"
+						. $row['studentRating'] . "</td><td>" . $row['evaluatorRating'] . "</td><td>" . $row['applicableDepts'] . "</td><td>" . $row['sector'] . 
+						"</td></tr>";
 				    }
 				echo "</table>";
 				} else {
@@ -235,22 +215,13 @@
 
 		<div id="nav">
 			<div id="user_info">
-				<?php
-					@session_start();
-					$usr = $_SESSION["userID"];
-					$userDept = $_SESSION["userDept"];
-
-					echo "<p>$usr</p>";
-					echo "<p>$userDept</p>";
-				?>
-				<p><a href='logout.php'>Logout</a></p>
+				<p> GUEST </p>
 			</div>
 
 			<div id="menu_buttons">
 				<ul>
-				  <li><a href="quotaa.php" class="button-2">Quotas</a></li>
-				  <li><a href="advisor_approve.php" class="button-2">Companies</a></li>
-				  <li><a href="general_announcementa.php" class="button-2">Anouncements</a></li>
+				  <li><a href="companyl.php" class="button-2">Companies</a></li>
+				  <li><a href="general_announcementl.php" class="button-2">Anouncements</a></li>
 				</ul>
 			</div>
 		</div>

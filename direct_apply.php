@@ -5,7 +5,18 @@
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+	<script language="javascript">
 
+		function validateForm(){
+		  var a=document.forms["apply_form"]["start"].value;
+		  var b=document.forms["apply_form"]["end"].value;
+
+		  if (a==null || a=="",b==null || b==""){
+		    alert("Please Fill All Fields!");
+		    return false;
+		  }
+		}
+	</script>
 	<style style="text/css">
 
 
@@ -141,7 +152,7 @@
 	<div id="container">
 		<div id="right_content_area"> 
 			<div class="company_details">
-				<form action="" method="post" name="apply_form" class="apply_form">
+				<form action="" method="post" name="apply_form" class="apply_form"  onsubmit="return validateForm()"> 
 				<h2>Company Details</h2>
 				<button type="submit" name="apply" action="#">Apply</button>
 				<hr>
@@ -175,9 +186,9 @@
 					echo "<hr>";
 					echo "<form action=\"add_application.php\" method=\"post\">";
 					echo "<label for=\"start\">Start Date:</label>";
-					echo "<input name = start type=\"date\" />";
+					echo "<input name = \"start\" type=\"date\" />";
 					echo "<label for=\"end\">End Date:</label>";
-					echo "<input name = end type=\"date\" />";
+					echo "<input name = \"end\" type=\"date\" />";
 					echo "</form>";
 					$userID = $_GET['userID'];
 					if(isset($_POST['apply'])){

@@ -153,11 +153,6 @@
 						$city=$_POST['city'];
 					}
 
-					if(isset($_POST['add_quota'])){
-						header('location:add_quota_util.php?userID='.$userID);
-					}
-
-
 					$directApplyAmount = "SELECT appID FROM directApply WHERE studentID = '$userID'";
 					$directApplyAmountResult = mysqli_query($conn, $directApplyAmount);
 					$directApplyRows = mysqli_num_rows($directApplyAmountResult);
@@ -170,7 +165,7 @@
 					
 					echo "<div class=\"menu_table_container\">";
 					echo "<div class=\"menu_container\">";
-					echo "<form method=\"post\" action=\"quotas.php\">";
+					echo "<form method=\"post\" action=\"quotaa.php\">";
 					echo "<div class=\"menu_comp\">";
 					echo "<select id=\"city\" name=\"city\" >"; 
 	 				echo "<option selected=\"selected\">All Companies</option>";
@@ -183,10 +178,6 @@
 
 					echo "<div class=\"menu_comp\">";
 					echo "<button type=\"submit\" name=\"filter\">Filter</button>";				
-					echo "</div>";
-					
-					echo "<div class=\"menu_comp\">";
-					echo "<button type=\"submit\" name=\"add_quota\">Add Quota</button>";				
 					echo "</div>";
 					
 					echo "</div>";
@@ -321,10 +312,9 @@
 
 				<div id="menu_buttons">
 					<ul>
-						<li><a href="secretary_see_applications.php" class="button-2">Applications</a></li>
-						<li><a href="quotas.php" class="button-2">Quotas</a></li>
-						<li><a href="companys.php" class="button-2">Companies</a></li>
-						<li><a href="general_announcements.php" class="button-2">Anouncements</a></li>
+						<li><a href="quotaa.php" class="button-2">Quotas</a></li>
+						<li><a href="advisor_approve.php" class="button-2">Companies</a></li>
+						<li><a href="general_announcementa.php" class="button-2">Anouncements</a></li>
 					</ul>
 				</div>
 			</div>
