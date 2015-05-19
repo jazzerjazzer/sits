@@ -197,14 +197,14 @@
 				if (mysqli_num_rows($directApplyResult) > 0) {
 				    
 				    while($row = mysqli_fetch_assoc($directApplyResult)) {
-			    		echo "<tr><td>" . $row['appID'] . "</td><td>" . $row['pName'] . "</td><td>" . $row['surname'] . "</td><td>". $row['studentID'] . "</td><td>" . $row['compID'] . "</td><td>" . $row['name'] ."</td><td>" . "<a href=secretary_approve_util.php?appID=". $row['appID'] . ">Approve</a>"."</td></tr>";
+			    		echo "<tr><td>" . $row['appID'] . "</td><td>" . $row['pName'] . "</td><td>" . $row['surname'] . "</td><td>". $row['studentID'] . "</td><td>" . $row['compID'] . "</td><td>" . $row['name'] ."</td><td>" . "<a href=secretary_approve_util.php?appID=". $row['appID'] . "&secretaryID=".$usr.">Approve</a>"."</td></tr>";
 				    }
 				} 
 				if (mysqli_num_rows($quotaApplyResult) > 0) {
 				    
 				    while($row = mysqli_fetch_assoc($quotaApplyResult)) {
 				    	if($row['drawResult'] == 1){
-				    		echo "<tr><td>" . $row['appID'] . "</td><td>" . $row['pName'] . "</td><td>" . $row['surname'] . "</td><td>". $row['studentID'] . "</td><td>" . $row['compID'] . "</td><td>" . $row['name'] ."</td><td>" . "<a href=secretary_approve_util.php?appID=". $row['appID'] . ">Approve</a>"."</td></tr>";
+				    		echo "<tr><td>" . $row['appID'] . "</td><td>" . $row['pName'] . "</td><td>" . $row['surname'] . "</td><td>". $row['studentID'] . "</td><td>" . $row['compID'] . "</td><td>" . $row['name'] ."</td><td>" . "<a href=secretary_approve_util.php?appID=". $row['appID'] . "&secretaryID=".$usr. ">Approve</a>"."</td></tr>";
 				    	}else{
 				    		echo "<tr><td>" . $row['appID'] . "</td><td>" . $row['pName'] . "</td><td>" . $row['surname'] . "</td><td>". $row['studentID'] . "</td><td>" . $row['compID'] . "</td><td>" . $row['name'] ."</td><td>" . "N/A"."</td></tr>";
 				    	}

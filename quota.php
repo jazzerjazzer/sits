@@ -187,6 +187,7 @@
 					echo "<button type=\"submit\" name=\"search\">Search</button>";
 					echo "</div>";
 					echo "</div>";
+
 					$sql2 = "SELECT c.name, c.city, q.quotaID, q.compID, q.internshipStartDate, q.internshipEndDate, q.availableYears, q.status, q.quotaAmount, q.quotaDeadline
 							FROM quota as q, company as c
 							WHERE q.quotaID NOT IN(SELECT aa.quotaID
@@ -243,14 +244,25 @@
 									"</td><td>"."N/A"."</td></tr>"; 
 							}else{
 								if($directApplyRows > 0){
-									echo "<tr><td>" . $row['quotaID'] . "</td><td>" . $row['name'] . "</td><td>" . $row['city'] . "</td><td>" . $row['quotaDeadline'] . "</td><td>"
-									. $row['internshipStartDate'] . "</td><td>" . $row['internshipEndDate'] . "</td><td>" . $row['qcount'] . "</td><td>" . $row['quotaAmount'] . "</td><td>" . $row['status'] . "</td><td>".  $row['availableYears'] . 
-										"</td><td>"."<a href=quota_apply.php?quotaID=". $row["quotaID"] . "&compID=". $row["compID"] . "&userID=".$userID."&da=1". ">Apply</a>"."</td></tr>"; 
+									if(strcmp($row['status'], "waiting for student approval") == 0){
+										echo "<tr><td>" . $row['quotaID'] . "</td><td>" . $row['name'] . "</td><td>" . $row['city'] . "</td><td>" . $row['quotaDeadline'] . "</td><td>"
+										. $row['internshipStartDate'] . "</td><td>" . $row['internshipEndDate'] . "</td><td>" . $row['qcount'] . "</td><td>" . $row['quotaAmount'] . "</td><td>" . $row['status'] . "</td><td>".  $row['availableYears'] . 
+											"</td><td>"."N/A"."</td></tr>"; 
+									}else{
+										echo "<tr><td>" . $row['quotaID'] . "</td><td>" . $row['name'] . "</td><td>" . $row['city'] . "</td><td>" . $row['quotaDeadline'] . "</td><td>"
+										. $row['internshipStartDate'] . "</td><td>" . $row['internshipEndDate'] . "</td><td>" . $row['qcount'] . "</td><td>" . $row['quotaAmount'] . "</td><td>" . $row['status'] . "</td><td>".  $row['availableYears'] . 
+											"</td><td>"."<a href=quota_apply.php?quotaID=". $row["quotaID"] . "&compID=". $row["compID"] . "&userID=".$userID."&da=1". ">Apply</a>"."</td></tr>"; 
+									}
 								}else{
-									echo "<tr><td>" . $row['quotaID'] . "</td><td>" . $row['name'] . "</td><td>" . $row['city'] . "</td><td>" . $row['quotaDeadline'] . "</td><td>"
-									. $row['internshipStartDate'] . "</td><td>" . $row['internshipEndDate'] . "</td><td>" . $row['qcount'] . "</td><td>" . $row['quotaAmount'] . "</td><td>" . $row['status'] . "</td><td>".  $row['availableYears'] . 
-										"</td><td>"."<a href=quota_apply.php?quotaID=". $row["quotaID"] . "&compID=". $row["compID"] . "&userID=".$userID."&da=0". ">Apply</a>"."</td></tr>"; 
-								
+									if(strcmp($row['status'], "waiting for student approval") == 0){
+										echo "<tr><td>" . $row['quotaID'] . "</td><td>" . $row['name'] . "</td><td>" . $row['city'] . "</td><td>" . $row['quotaDeadline'] . "</td><td>"
+										. $row['internshipStartDate'] . "</td><td>" . $row['internshipEndDate'] . "</td><td>" . $row['qcount'] . "</td><td>" . $row['quotaAmount'] . "</td><td>" . $row['status'] . "</td><td>".  $row['availableYears'] . 
+											"</td><td>"."N/A"."</td></tr>"; 
+									}else{
+										echo "<tr><td>" . $row['quotaID'] . "</td><td>" . $row['name'] . "</td><td>" . $row['city'] . "</td><td>" . $row['quotaDeadline'] . "</td><td>"
+										. $row['internshipStartDate'] . "</td><td>" . $row['internshipEndDate'] . "</td><td>" . $row['qcount'] . "</td><td>" . $row['quotaAmount'] . "</td><td>" . $row['status'] . "</td><td>".  $row['availableYears'] . 
+											"</td><td>"."<a href=quota_apply.php?quotaID=". $row["quotaID"] . "&compID=". $row["compID"] . "&userID=".$userID."&da=0". ">Apply</a>"."</td></tr>"; 
+									}
 								}
 							}
 							mysqli_data_seek($appliedQuotaResult, 0);
@@ -260,14 +272,26 @@
 						
 						while($row = mysqli_fetch_assoc($result2)) {
 							if($directApplyRows > 0){
-								echo "<tr><td>" . $row['quotaID'] . "</td><td>" . $row['name'] . "</td><td>" . $row['city'] . "</td><td>" . $row['quotaDeadline'] . "</td><td>"
-								. $row['internshipStartDate'] . "</td><td>" . $row['internshipEndDate'] . "</td><td>" . "0" . "</td><td>" . $row['quotaAmount'] . "</td><td>" . $row['status'] . "</td><td>".  $row['availableYears'] . 
-								"</td><td>"."<a href=quota_apply.php?quotaID=". $row["quotaID"] . "&compID=". $row["compID"] . "&userID=".$userID."&da=1". ">Apply</a>"."</td></tr>"; 
+								if(strcmp($row['status'], "waiting for student approval") == 0){
+									echo "<tr><td>" . $row['quotaID'] . "</td><td>" . $row['name'] . "</td><td>" . $row['city'] . "</td><td>" . $row['quotaDeadline'] . "</td><td>"
+										. $row['internshipStartDate'] . "</td><td>" . $row['internshipEndDate'] . "</td><td>" . "0" . "</td><td>" . $row['quotaAmount'] . "</td><td>" . $row['status'] . "</td><td>".  $row['availableYears'] . 
+										"</td><td>"."N/A"."</td></tr>"; 
+								}else{
+									echo "<tr><td>" . $row['quotaID'] . "</td><td>" . $row['name'] . "</td><td>" . $row['city'] . "</td><td>" . $row['quotaDeadline'] . "</td><td>"
+										. $row['internshipStartDate'] . "</td><td>" . $row['internshipEndDate'] . "</td><td>" . "0" . "</td><td>" . $row['quotaAmount'] . "</td><td>" . $row['status'] . "</td><td>".  $row['availableYears'] . 
+										"</td><td>"."<a href=quota_apply.php?quotaID=". $row["quotaID"] . "&compID=". $row["compID"] . "&userID=".$userID."&da=1". ">Apply</a>"."</td></tr>"; 
+								}
+								
 							}else{
-								echo "<tr><td>" . $row['quotaID'] . "</td><td>" . $row['name'] . "</td><td>" . $row['city'] . "</td><td>" . $row['quotaDeadline'] . "</td><td>"
-								. $row['internshipStartDate'] . "</td><td>" . $row['internshipEndDate'] . "</td><td>" . "0" . "</td><td>" . $row['quotaAmount'] . "</td><td>" . $row['status'] . "</td><td>".  $row['availableYears'] . 
-								"</td><td>"."<a href=quota_apply.php?quotaID=". $row["quotaID"] . "&compID=". $row["compID"] . "&userID=".$userID."&da=0". ">Apply</a>"."</td></tr>"; 
-
+								if(strcmp($row['status'], "waiting for student approval") == 0){
+									echo "<tr><td>" . $row['quotaID'] . "</td><td>" . $row['name'] . "</td><td>" . $row['city'] . "</td><td>" . $row['quotaDeadline'] . "</td><td>"
+										. $row['internshipStartDate'] . "</td><td>" . $row['internshipEndDate'] . "</td><td>" . "0" . "</td><td>" . $row['quotaAmount'] . "</td><td>" . $row['status'] . "</td><td>".  $row['availableYears'] . 
+										"</td><td>"."N/A"."</td></tr>"; 
+								}else{
+									echo "<tr><td>" . $row['quotaID'] . "</td><td>" . $row['name'] . "</td><td>" . $row['city'] . "</td><td>" . $row['quotaDeadline'] . "</td><td>"
+										. $row['internshipStartDate'] . "</td><td>" . $row['internshipEndDate'] . "</td><td>" . "0" . "</td><td>" . $row['quotaAmount'] . "</td><td>" . $row['status'] . "</td><td>".  $row['availableYears'] . 
+										"</td><td>"."<a href=quota_apply.php?quotaID=". $row["quotaID"] . "&compID=". $row["compID"] . "&userID=".$userID."&da=0". ">Apply</a>"."</td></tr>"; 
+								}
 							}
 					    }
 					}
