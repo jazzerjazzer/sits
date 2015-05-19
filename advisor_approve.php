@@ -150,6 +150,13 @@
 				}elseif(isset($_POST['search'])){
 					$searchKey =$_POST['company_name'];
 				}
+				$result_approve = $_GET['result'];
+
+				if($result_approve == 2){
+					echo "<br> Approved successfuly!";
+				}else if($result_close_exec == 1){
+					echo "<br> Cannot approve!";
+				}
 
 				$sql="SELECT DISTINCT city FROM company order by city"; 
 				$result = mysqli_query($conn, $sql);

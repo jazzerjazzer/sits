@@ -210,6 +210,7 @@
 								
 							}
 							echo "</select>";
+							$contFlag = 0;
 							if(isset($_POST['add'])){
 								$city=$_POST['city'];
 								$country=$_POST['country'];
@@ -221,17 +222,20 @@
 								$sql = "INSERT INTO company VALUES (DEFAULT, '$name', '$password', '$address', '$telephone', NULL, \"not approved\", NULL, NULL,
 								 '$city', '$country', NULL, NULL, '$sector')";
 								$result = mysqli_query($conn, $sql);
-								header('location:company.php?result=5');
+								$contFlag = 1;
 							}
+							echo "<label for=\"address\">Address:</label>";
+					        echo "<input name=\"address\" />";
+					        echo "<label for=\"telephone\">Telephone:</label>";
+					        echo "<input name=\"telephone\" />";
+					        echo "<label for=\"sector\">Sector:</label>";
+					        echo "<input name=\"sector\" />";
+						    echo "</fieldset>";
+							echo "</form>";
+							if($contFlag == 1)
+								echo "Succesfully added!";
 						?>			            
-						<label for="address">Address:</label>
-			            <input name="address" />
-			            <label for="telephone">Telephone:</label>
-			            <input name="telephone" />
-			            <label for="sector">Sector:</label>
-			            <input name="sector" />
-			        </fieldset>
-			    </form>
+						
 			</div>
 		</div>
 		
