@@ -131,7 +131,7 @@
 			<?php
 				@session_start();
 				$usr = $_SESSION["userID"];
-
+				$secDeptName = $_SESSION["userDept"];
 				$servername = "localhost";
 				$username = "root";
 				$password = "comodo365";
@@ -177,12 +177,12 @@
 
 				echo "</div>";
 
-				$directApplyQuery = "SELECT pName, surname, studentID, company.compID, application.appID, company.name, approval FROM company, person, directApply, application WHERE application.approval = \"not approved\" AND application.appID = directApply.appID AND person.userID = directApply.studentID AND directApply.compID = company.compID";
+				$directApplyQuery = "SELECT deptName, pName, surname, studentID, company.compID, application.appID, company.name, approval FROM company, person, directApply, application WHERE application.approval = \"not approved\" AND application.appID = directApply.appID AND person.userID = directApply.studentID AND directApply.compID = company.compID";
 				
 				if(strcmp($show_all_applications, "show_all") == 0){
-					$quotaApplyQuery = "SELECT quotaID, pName, surname, studentID, company.compID, application.appID, company.name, drawResult FROM company, person, quotaApply, application WHERE application.approval = \"not approved\" AND application.appID = quotaApply.appID AND person.userID = quotaApply.studentID AND quotaApply.compID = company.compID";
+					$quotaApplyQuery = "SELECT deptName, quotaID, pName, surname, studentID, company.compID, application.appID, company.name, drawResult FROM company, person, quotaApply, application WHERE application.approval = \"not approved\" AND application.appID = quotaApply.appID AND person.userID = quotaApply.studentID AND quotaApply.compID = company.compID";
 				}else{
-					$quotaApplyQuery = "SELECT quotaID, pName, surname, studentID, company.compID, application.appID, company.name, drawResult FROM company, person, quotaApply, application WHERE quotaApply.drawResult = 1 AND application.approval = \"not approved\" AND application.appID = quotaApply.appID AND person.userID = quotaApply.studentID AND quotaApply.compID = company.compID";
+					$quotaApplyQuery = "SELECT deptName, quotaID, pName, surname, studentID, company.compID, application.appID, company.name, drawResult FROM company, person, quotaApply, application WHERE quotaApply.drawResult = 1 AND application.approval = \"not approved\" AND application.appID = quotaApply.appID AND person.userID = quotaApply.studentID AND quotaApply.compID = company.compID";
 				}
 				
 
@@ -195,35 +195,39 @@
 				echo "<table class=\"company_table\">"; 
 			    echo "<tr> <th>Application ID</th> <th>Student Name</th> <th>Surname</th> <th>Student ID</th> <th>Company ID</th> <th>Company Name</th> <th>Actions</th></tr>";
 				if (mysqli_num_rows($directApplyResult) > 0) {
-				    
 				    while($row = mysqli_fetch_assoc($directApplyResult)) {
-			    		echo "<tr><td>" . $row['appID'] . "</td><td>" . $row['pName'] . "</td><td>" . $row['surname'] . "</td><td>". $row['studentID'] . "</td><td>" . $row['compID'] . "</td><td>" . $row['name'] ."</td><td>" . "<a href=secretary_approve_util.php?appID=". $row['appID'] . "&secretaryID=".$usr.">Approve</a>"."</td></tr>";
+				    	if(strcasecmp($secDeptName, $row['deptName']) == 0){
+			    			echo "<tr><td>" . $row['appID'] . "</td><td>" . $row['pName'] . "</td><td>" . $row['surname'] . "</td><td>". $row['studentID'] . "</td><td>" . $row['compID'] . "</td><td>" . $row['name'] ."</td><td>" . "<a href=secretary_approve_util.php?appID=". $row['appID'] . "&secretaryID=".$usr.">Approve</a>"."</td></tr>";
+				    	}
 				    }
 				} 
 				if (mysqli_num_rows($quotaApplyResult) > 0) {
 				    
 				    while($row = mysqli_fetch_assoc($quotaApplyResult)) {
-				    	if($row['drawResult'] == 1){
-				    		echo "<tr><td>" . $row['appID'] . "</td><td>" . $row['pName'] . "</td><td>" . $row['surname'] . "</td><td>". $row['studentID'] . "</td><td>" . $row['compID'] . "</td><td>" . $row['name'] ."</td><td>" . "<a href=secretary_approve_util.php?appID=". $row['appID'] . "&secretaryID=".$usr. ">Approve</a>"."</td></tr>";
-				    	}else{
-				    		echo "<tr><td>" . $row['appID'] . "</td><td>" . $row['pName'] . "</td><td>" . $row['surname'] . "</td><td>". $row['studentID'] . "</td><td>" . $row['compID'] . "</td><td>" . $row['name'] ."</td><td>" . "N/A"."</td></tr>";
-				    	}
+				    	if(strcasecmp($secDeptName, $row['deptName']) == 0){
+					    	if($row['drawResult'] == 1){
+					    		echo "<tr><td>" . $row['appID'] . "</td><td>" . $row['pName'] . "</td><td>" . $row['surname'] . "</td><td>". $row['studentID'] . "</td><td>" . $row['compID'] . "</td><td>" . $row['name'] ."</td><td>" . "<a href=secretary_approve_util.php?appID=". $row['appID'] . "&secretaryID=".$usr. ">Approve</a>"."</td></tr>";
+					    	}else{
+					    		echo "<tr><td>" . $row['appID'] . "</td><td>" . $row['pName'] . "</td><td>" . $row['surname'] . "</td><td>". $row['studentID'] . "</td><td>" . $row['compID'] . "</td><td>" . $row['name'] ."</td><td>" . "N/A"."</td></tr>";
+					    	}
+					    }
 				    }
 				}
 				echo "</table>";
 
 				echo "<h3> Applications Waiting for Announcement</h3>";
 				echo "<hr>";
-				$quotaApplyQuery2 = "SELECT quotaID, pName, surname, studentID, company.compID, application.appID, company.name, drawResult FROM company, person, quotaApply, application WHERE quotaApply.drawResult = 1 AND application.approval = \"approved\" AND application.appID = quotaApply.appID AND person.userID = quotaApply.studentID AND quotaApply.compID = company.compID AND quotaApply.announced = 0";
+				$quotaApplyQuery2 = "SELECT deptName, quotaID, pName, surname, studentID, company.compID, application.appID, company.name, drawResult FROM company, person, quotaApply, application WHERE quotaApply.drawResult = 1 AND application.approval = \"approved\" AND application.appID = quotaApply.appID AND person.userID = quotaApply.studentID AND quotaApply.compID = company.compID AND quotaApply.announced = 0";
 
 				$quotaApplyResult2 = mysqli_query($conn, $quotaApplyQuery2);
 				
 				echo "<table class=\"company_table\">"; 
 			    echo "<tr> <th>Application ID</th> <th>Student Name</th> <th>Surname</th> <th>Student ID</th> <th>Company ID</th> <th>Company Name</th> <th>Actions</th></tr>";
 				if (mysqli_num_rows($quotaApplyResult2) > 0) {
-				    
 				    while($row = mysqli_fetch_assoc($quotaApplyResult2)) {
-			    		echo "<tr><td>" . $row['appID'] . "</td><td>" . $row['pName'] . "</td><td>" . $row['surname'] . "</td><td>". $row['studentID'] . "</td><td>" . $row['compID'] . "</td><td>" . $row['name'] ."</td><td>" . "<a href=app_fb_announce.php?appID=". $row['appID'] ."&studentID=".$row['studentID']. "&secID=".$usr. ">Make Feedback Announcement</a>"."</td></tr>";
+				    	if(strcasecmp($secDeptName, $row['deptName']) == 0){
+			    			echo "<tr><td>" . $row['appID'] . "</td><td>" . $row['pName'] . "</td><td>" . $row['surname'] . "</td><td>". $row['studentID'] . "</td><td>" . $row['compID'] . "</td><td>" . $row['name'] ."</td><td>" . "<a href=app_fb_announce.php?appID=". $row['appID'] ."&studentID=".$row['studentID']. "&secID=".$usr. ">Make Feedback Announcement</a>"."</td></tr>";
+				    	}
 				    }
 				} 
 				echo "</table>";
