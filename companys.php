@@ -143,13 +143,14 @@
 				if (!$conn) {
 				    die("Connection failed: " . mysqli_connect_error());
 				}
-
+				
+				if(isset($_POST['see_report'])){
+					header('location:see_report.php');
+				}
 				if(isset($_POST['filter'])){
 					$city=$_POST['city'];
 				}elseif(isset($_POST['search'])){
 					$searchKey =$_POST['company_name'];
-				}elseif(isset($_POST['see_report'])){
-					header('location:see_report.php');
 				}
 
 				$sql="SELECT DISTINCT city FROM company order by city"; 
