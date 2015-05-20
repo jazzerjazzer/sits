@@ -177,26 +177,27 @@
 				$viewQuery = "CREATE VIEW ReadOnlyCompanies AS
 							SELECT compID, name, city, studentRating, evaluatorRating, applicableDepts, sector 
 							FROM company NATURAL JOIN registeredCompany";
-
-				if(strcmp($city, "") !== 0){
-					if(strcmp($city, "All Companies") !== 0)
-						$viewQuery =  $viewQuery. " WHERE city='$city'";
-				}
-
-				if(strcmp($searchKey, "") !== 0){
-					$viewQuery = $viewQuery." WHERE name LIKE '%$searchKey%'";
-				}
-
 				$result = mysqli_query($conn, $viewQuery);
 
 				$populateQuery = "SELECT * FROM ReadOnlyCompanies";
-				$result = mysqli_query($conn, $populateQuery);
+				
+				if(strcmp($city, "") !== 0){
+					if(strcmp($city, "All Companies") !== 0){
+						$populateQuery = "SELECT * FROM ReadOnlyCompanies WHERE city='$city'";
+					}
+				}
+
+				if(strcmp($searchKey, "") !== 0){
+					$populateQuery = "SELECT * FROM ReadOnlyCompanies WHERE name LIKE '%$searchKey%'";
+				}
+				$populateQueryResult = mysqli_query($conn, $populateQuery);
+				
 				echo "<div class=\"table_container\">";
-				if (mysqli_num_rows($result) > 0) {
+				if (mysqli_num_rows($populateQueryResult) > 0) {
 				    // output data of each row
 				    echo "<table class=\"company_table\">"; // start a table tag in the HTML
 				    echo "<tr> <th>ID</th> <th>Name</th> <th>City</th> <th>Student Rating</th> <th>Evaluator Rating</th> <th>App Depts.</th> <th>Sector</th></tr>";
-				    while($row = mysqli_fetch_assoc($result)) {
+				    while($row = mysqli_fetch_assoc($populateQueryResult)) {
 						echo "<tr><td>" . $row['compID'] . "</td><td>" . $row['name'] . "</td><td>" . $row['city'] . "</td><td>"
 						. $row['studentRating'] . "</td><td>" . $row['evaluatorRating'] . "</td><td>" . $row['applicableDepts'] . "</td><td>" . $row['sector'] . 
 						"</td></tr>";
