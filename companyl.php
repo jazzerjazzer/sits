@@ -174,23 +174,23 @@
 				echo "<button type=\"submit\" name=\"search\">Search</button>";
 				echo "</div>";
 				echo "</div>";
-				
+				$viewQuery = "CREATE VIEW ReadOnlyCompanies AS
+							SELECT compID, name, city, studentRating, evaluatorRating, applicableDepts, sector 
+							FROM company NATURAL JOIN registeredCompany";
+
 				if(strcmp($city, "") !== 0){
 					if(strcmp($city, "All Companies") !== 0)
-						$sql = "SELECT compID, name, city, studentRating, evaluatorRating, applicableDepts, sector FROM company NATURAL JOIN registeredCompany WHERE city='$city'";
-					else
-						$sql = "SELECT compID, name, city, studentRating, evaluatorRating, applicableDepts, sector FROM company NATURAL JOIN registeredCompany";
-				}else if(is_null($city)){
-					$sql = "SELECT compID, name, city, studentRating, evaluatorRating, applicableDepts, sector FROM company NATURAL JOIN registeredCompany";
+						$viewQuery =  $viewQuery. " WHERE city='$city'";
 				}
 
 				if(strcmp($searchKey, "") !== 0){
-					$sql = "SELECT compID, name, city, studentRating, evaluatorRating, applicableDepts, sector 
-							FROM company NATURAL JOIN registeredCompany 
-							WHERE name LIKE '%$searchKey%'";
+					$viewQuery = $viewQuery." WHERE name LIKE '%$searchKey%'";
 				}
 
-				$result = mysqli_query($conn, $sql);
+				$result = mysqli_query($conn, $viewQuery);
+
+				$populateQuery = "SELECT * FROM ReadOnlyCompanies";
+				$result = mysqli_query($conn, $populateQuery);
 				echo "<div class=\"table_container\">";
 				if (mysqli_num_rows($result) > 0) {
 				    // output data of each row
