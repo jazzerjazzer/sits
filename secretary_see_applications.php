@@ -245,7 +245,7 @@
 					echo "<p>$name</p>";
 					echo "<p>CS</p>";
 				?>
-				<p>Logout</p>
+				<p><a href='logout.php'>Logout</a></p>
 			</div>
 
 			<div id="menu_buttons">

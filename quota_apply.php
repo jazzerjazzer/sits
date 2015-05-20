@@ -38,6 +38,7 @@
 		$result = mysqli_query($conn, $sql);
 		$row = mysqli_fetch_assoc($result);
 		$appID = $row['appID'];
+		//echo $appID;
 		$sql = "DELETE FROM application WHERE appID = '$appID'";
 		mysqli_query($conn, $sql);
 
